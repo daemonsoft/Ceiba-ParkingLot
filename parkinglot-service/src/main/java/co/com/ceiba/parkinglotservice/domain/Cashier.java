@@ -48,5 +48,4 @@ public class Cashier {
 		Invoice invoice = new Invoice(vehicle);
 		return invoice;
 	}
-
 }

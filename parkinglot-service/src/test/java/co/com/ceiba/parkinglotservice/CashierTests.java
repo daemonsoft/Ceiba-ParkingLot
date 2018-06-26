@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,7 +69,7 @@ public class CashierTests {
 
 		Date exitDate = calendar.getTime();
 
-		Vehicle vehicle = new Car("ABC123", 8000, 1000, entryDate);
+		Vehicle vehicle = new Car("ABC123", Cashier.DAY_PRICE_CAR, Cashier.HOUR_PRICE_CAR, entryDate);
 		vehicle.setExitDate(exitDate);
 
 		Invoice invoice = cashier.exitVehicle(vehicle);
@@ -89,11 +88,11 @@ public class CashierTests {
 
 		Date exitDate = calendar.getTime();
 
-		Vehicle vehicle = new Car("ABC123", 8000, 1000, entryDate);
+		Vehicle vehicle = new Car("ABC123", Cashier.DAY_PRICE_CAR, Cashier.HOUR_PRICE_CAR, entryDate);
 		vehicle.setExitDate(exitDate);
 
 		Invoice invoice = cashier.exitVehicle(vehicle);
 
-		assertTrue(8000 == invoice.getAmount());
+		assertTrue(Cashier.DAY_PRICE_CAR == invoice.getAmount());
 	}
 }

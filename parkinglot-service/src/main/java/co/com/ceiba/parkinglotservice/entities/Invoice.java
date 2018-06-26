@@ -6,6 +6,8 @@ import co.com.ceiba.parkinglotservice.domain.Cashier;
 
 public class Invoice {
 
+	private static final int MINIMUN_HOURS_TO_DAY = 9;
+
 	private final long DAY_IN_SECONDS = 86400;
 
 	private Vehicle vehicle;
@@ -19,12 +21,12 @@ public class Invoice {
 		long difference = vehicle.getExitDate().getTime() - vehicle.getEntryDate().getTime();
 
 		long seconds = TimeUnit.MILLISECONDS.toSeconds(difference);
-		long hours = TimeUnit.MILLISECONDS.toHours(difference);
+		long hours = (long) Math.ceil((float) seconds / 3600);
 		System.out.println("Horas " + hours);
-		if (seconds <= DAY_IN_SECONDS) {
-			return Cashier.HOUR_PRICE_CAR * (hours + 1);
+		if ((hours + 1) < MINIMUN_HOURS_TO_DAY) {
+			return Cashier.HOUR_PRICE_CAR * hours;
 		} else {
-			return 8000;
+			return Cashier.DAY_PRICE_CAR;
 		}
 	}
 }
