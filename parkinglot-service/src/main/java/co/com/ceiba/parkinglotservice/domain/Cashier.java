@@ -3,8 +3,6 @@ package co.com.ceiba.parkinglotservice.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.com.ceiba.parkinglotservice.entities.Bike;
-import co.com.ceiba.parkinglotservice.entities.Car;
 import co.com.ceiba.parkinglotservice.entities.Invoice;
 import co.com.ceiba.parkinglotservice.entities.Vehicle;
 
@@ -29,11 +27,11 @@ public abstract class Cashier {
 	public abstract Invoice vehicleExit(Vehicle vehicle);
 
 	public int getMaxCapacity() {
-		return maxCapacity;
+		return this.maxCapacity;
 	}
 
 	public List<Vehicle> getVehicleList() {
-		return vehicleList;
+		return this.vehicleList;
 	}
 
 	public void setVehicleList(List<Vehicle> vehicleList) {
@@ -45,6 +43,6 @@ public abstract class Cashier {
 	}
 
 	public int getHourPrice() {
-		return this.getHourPrice();
+		return this.hourPrice;
 	}
 }

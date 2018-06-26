@@ -1,7 +1,5 @@
 package co.com.ceiba.parkinglotservice.domain;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import co.com.ceiba.parkinglotservice.entities.Invoice;

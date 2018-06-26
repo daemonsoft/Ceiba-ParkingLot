@@ -77,7 +77,7 @@ public class CashierTests {
 		Date entryDate = calendar.getTime();
 
 		calendar.setTime(entryDate);
-		calendar.add(Calendar.HOUR, 1);
+		calendar.add(Calendar.MINUTE, 59);
 
 		Date exitDate = calendar.getTime();
 
@@ -115,7 +115,7 @@ public class CashierTests {
 		Date entryDate = calendar.getTime();
 
 		calendar.setTime(entryDate);
-		calendar.add(Calendar.HOUR, 1);
+		calendar.add(Calendar.MINUTE, 59);
 
 		Date exitDate = calendar.getTime();
 

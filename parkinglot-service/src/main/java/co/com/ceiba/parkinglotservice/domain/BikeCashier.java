@@ -1,11 +1,7 @@
 package co.com.ceiba.parkinglotservice.domain;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import co.com.ceiba.parkinglotservice.entities.Bike;
-import co.com.ceiba.parkinglotservice.entities.Car;
 import co.com.ceiba.parkinglotservice.entities.Invoice;
 import co.com.ceiba.parkinglotservice.entities.Vehicle;
 
@@ -22,7 +18,6 @@ public class BikeCashier extends Cashier {
 		}
 		vehicleList.add(vehicle);
 		return "Vehiculo ingresado";
-
 	}
 
 	public Invoice vehicleExit(Vehicle vehicle) {
@@ -31,7 +26,7 @@ public class BikeCashier extends Cashier {
 
 		long seconds = TimeUnit.MILLISECONDS.toSeconds(difference);
 		long hours = (long) Math.ceil((float) seconds / 3600);
-		
+
 		if ((hours + 1) < MINIMUN_HOURS_TO_DAY) {
 			amount = hourPrice * hours;
 		} else {

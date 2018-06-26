@@ -13,4 +13,8 @@ public class Bike extends Vehicle {
 		super(licensePlate, entryDate);
 		this.engineCapacity = engineCapacity;
 	}
+
+	public int getEngineCapacity() {
+		return this.engineCapacity;
+	}
 }
