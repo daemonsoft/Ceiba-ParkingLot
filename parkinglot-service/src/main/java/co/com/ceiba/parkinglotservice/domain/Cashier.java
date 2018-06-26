@@ -5,12 +5,17 @@ import java.util.List;
 
 import co.com.ceiba.parkinglotservice.entities.Bike;
 import co.com.ceiba.parkinglotservice.entities.Car;
+import co.com.ceiba.parkinglotservice.entities.Invoice;
 import co.com.ceiba.parkinglotservice.entities.Vehicle;
 
 public class Cashier {
 
 	public static final int MAX_CAPACITY_CAR = 20;
 	public static final int MAX_CAPACITY_BIKE = 10;
+	public static final int HOUR_PRICE_BIKE = 500;
+	public static final int HOUR_PRICE_CAR = 1000;
+	public static final int DAY_PRICE_CAR = 8000;
+	public static final int DAY_PRICE_BIKE = 4000;
 
 	private List<Vehicle> bikeList;
 	private List<Vehicle> carList;
@@ -37,6 +42,11 @@ public class Cashier {
 		}
 		return "Vehiculo no ingresado";
 
+	}
+
+	public Invoice exitVehicle(Vehicle vehicle) {
+		Invoice invoice = new Invoice(vehicle);
+		return invoice;
 	}
 
 }
