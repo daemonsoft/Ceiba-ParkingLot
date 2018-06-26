@@ -2,15 +2,12 @@ package co.com.ceiba.parkinglotservice.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import co.com.ceiba.parkinglotservice.entities.Invoice;
 import co.com.ceiba.parkinglotservice.entities.Vehicle;
 
 public class CarCashier extends Cashier {
-
-	private int maxCapacity;
-	private int hourPrice;
-	private int dayPrice;
 
 	public CarCashier(int maxCapacity, int hourPrice, int dayPrice) {
 		super(maxCapacity, hourPrice, dayPrice);
@@ -27,7 +24,18 @@ public class CarCashier extends Cashier {
 	}
 
 	public Invoice vehicleExit(Vehicle vehicle) {
-		Invoice invoice = new Invoice(vehicle, 0);
+		long amount = 0;
+		long difference = vehicle.getExitDate().getTime() - vehicle.getEntryDate().getTime();
+
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(difference);
+		long hours = (long) Math.ceil((float) seconds / 3600);
+
+		if ((hours + 1) < MINIMUN_HOURS_TO_DAY) {
+			amount = hourPrice * hours;
+		} else {
+			amount = dayPrice;
+		}
+		Invoice invoice = new Invoice(vehicle, amount);
 		return invoice;
 	}
 }

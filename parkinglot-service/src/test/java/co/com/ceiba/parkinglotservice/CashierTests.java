@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,8 +23,14 @@ import co.com.ceiba.parkinglotservice.entities.Vehicle;
 @SpringBootTest
 public class CashierTests {
 
-	Cashier carCashier = new CarCashier(20, 1000, 8000);
-	Cashier bikeCashier = new BikeCashier(10, 500, 4000);
+	Cashier carCashier;
+	Cashier bikeCashier;
+
+	@Before
+	public void entryTest() {
+		carCashier = new CarCashier(20, 1000, 8000);
+		bikeCashier = new BikeCashier(10, 500, 4000);
+	}
 
 	@Test
 	public void carEntryTest() {
@@ -70,7 +77,7 @@ public class CashierTests {
 		Date entryDate = calendar.getTime();
 
 		calendar.setTime(entryDate);
-		calendar.add(Calendar.MINUTE, 59);
+		calendar.add(Calendar.HOUR, 1);
 
 		Date exitDate = calendar.getTime();
 
@@ -99,5 +106,43 @@ public class CashierTests {
 		Invoice invoice = carCashier.vehicleExit(vehicle);
 
 		assertTrue(carCashier.getDayPrice() == invoice.getAmount());
+	}
+
+	@Test
+	public void bikeExitByHourTest() {
+		bikeCashier.getVehicleList().clear();
+		Calendar calendar = Calendar.getInstance();
+		Date entryDate = calendar.getTime();
+
+		calendar.setTime(entryDate);
+		calendar.add(Calendar.HOUR, 1);
+
+		Date exitDate = calendar.getTime();
+
+		Vehicle vehicle = new Bike("ABC123", entryDate, 125);
+		vehicle.setExitDate(exitDate);
+
+		Invoice invoice = bikeCashier.vehicleExit(vehicle);
+		long amount = invoice.getAmount();
+		assertTrue(bikeCashier.getHourPrice() == amount);
+	}
+
+	@Test
+	public void bikeExitByDayTest() {
+		bikeCashier.getVehicleList().clear();
+		Calendar calendar = Calendar.getInstance();
+		Date entryDate = calendar.getTime();
+
+		calendar.setTime(entryDate);
+		calendar.add(Calendar.DATE, 1);
+
+		Date exitDate = calendar.getTime();
+
+		Vehicle vehicle = new Bike("ABC123", entryDate, 125);
+		vehicle.setExitDate(exitDate);
+
+		Invoice invoice = bikeCashier.vehicleExit(vehicle);
+
+		assertTrue(bikeCashier.getDayPrice() == invoice.getAmount());
 	}
 }

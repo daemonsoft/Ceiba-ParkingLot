@@ -10,9 +10,10 @@ import co.com.ceiba.parkinglotservice.entities.Vehicle;
 
 public abstract class Cashier {
 
-	private int maxCapacity;
-	private int hourPrice;
-	private int dayPrice;
+	protected static final long MINIMUN_HOURS_TO_DAY = 9;
+	protected int maxCapacity;
+	protected int hourPrice;
+	protected int dayPrice;
 
 	protected List<Vehicle> vehicleList;
 
