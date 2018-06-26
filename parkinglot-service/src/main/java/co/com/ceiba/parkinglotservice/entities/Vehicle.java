@@ -6,17 +6,13 @@ public class Vehicle {
 	private String licensePlate;
 	private Date entryDate;
 	private Date exitDate;
-	private int hourPrice;
-	private int dayPrice;
 
 	public Vehicle(String licensePlate) {
 		this.licensePlate = licensePlate;
 	}
 
-	public Vehicle(String licensePlate, int dayPrice, int hourPrice, Date entryDate) {
+	public Vehicle(String licensePlate, Date entryDate) {
 		this.licensePlate = licensePlate;
-		this.dayPrice = dayPrice;
-		this.hourPrice = hourPrice;
 		this.entryDate = entryDate;
 	}
 

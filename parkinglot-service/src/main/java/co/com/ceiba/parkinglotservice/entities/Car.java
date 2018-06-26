@@ -8,7 +8,7 @@ public class Car extends Vehicle {
 		super(licensePlate);
 	}
 
-	public Car(String licensePlate, int dayPrice, int hourPrice, Date entryDate) {
-		super(licensePlate, dayPrice, hourPrice, entryDate);
+	public Car(String licensePlate, Date entryDate) {
+		super(licensePlate, entryDate);
 	}
 }

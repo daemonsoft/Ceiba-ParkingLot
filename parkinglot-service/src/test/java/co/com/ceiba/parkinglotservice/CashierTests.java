@@ -10,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import co.com.ceiba.parkinglotservice.domain.BikeCashier;
+import co.com.ceiba.parkinglotservice.domain.CarCashier;
 import co.com.ceiba.parkinglotservice.domain.Cashier;
 import co.com.ceiba.parkinglotservice.entities.Bike;
 import co.com.ceiba.parkinglotservice.entities.Car;
@@ -19,48 +21,51 @@ import co.com.ceiba.parkinglotservice.entities.Vehicle;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CashierTests {
+
+	Cashier carCashier = new CarCashier(20, 1000, 8000);
+	Cashier bikeCashier = new BikeCashier(10, 500, 4000);
+
 	@Test
 	public void carEntryTest() {
-		Cashier cashier = new Cashier();
+		carCashier.getVehicleList().clear();
 		Vehicle vehicle = new Car("ABC123");
-		assertTrue("Vehiculo ingresado".equals(cashier.vehicleEntry(vehicle)));
+		assertTrue("Vehiculo ingresado".equals(carCashier.vehicleEntry(vehicle)));
 	}
 
 	@Test
 	public void bikeEntryTest() {
-		Cashier cashier = new Cashier();
+		bikeCashier.getVehicleList().clear();
 		Vehicle vehicle = new Bike("ABC123");
-		assertTrue("Vehiculo ingresado".equals(cashier.vehicleEntry(vehicle)));
+		assertTrue("Vehiculo ingresado".equals(bikeCashier.vehicleEntry(vehicle)));
 	}
 
 	@Test
 	public void carEntryMaxCapacityTest() {
-		Cashier cashier = new Cashier();
+		carCashier.getVehicleList().clear();
 		Vehicle vehicle;
 		String carEntryResponse = "";
-		for (int i = 0; i < Cashier.MAX_CAPACITY_CAR + 1; i++) {
+		for (int i = 0; i < carCashier.getMaxCapacity() + 1; i++) {
 			vehicle = new Car("ABC12" + i);
-			carEntryResponse = cashier.vehicleEntry(vehicle);
+			carEntryResponse = carCashier.vehicleEntry(vehicle);
 		}
 		assertTrue("No hay cupos disponibles".equals(carEntryResponse));
 	}
 
 	@Test
 	public void bikeEntryMaxCapacityTest() {
-		Cashier cashier = new Cashier();
+		bikeCashier.getVehicleList().clear();
 		Vehicle vehicle;
 		String bikeEntryResponse = "";
-		for (int i = 0; i < Cashier.MAX_CAPACITY_BIKE + 1; i++) {
+		for (int i = 0; i < bikeCashier.getMaxCapacity() + 1; i++) {
 			vehicle = new Bike("ABC12" + i);
-			bikeEntryResponse = cashier.vehicleEntry(vehicle);
+			bikeEntryResponse = bikeCashier.vehicleEntry(vehicle);
 		}
 		assertTrue("No hay cupos disponibles".equals(bikeEntryResponse));
 	}
 
 	@Test
 	public void carExitByHourTest() {
-
-		Cashier cashier = new Cashier();
+		carCashier.getVehicleList().clear();
 		Calendar calendar = Calendar.getInstance();
 		Date entryDate = calendar.getTime();
 
@@ -69,17 +74,17 @@ public class CashierTests {
 
 		Date exitDate = calendar.getTime();
 
-		Vehicle vehicle = new Car("ABC123", Cashier.DAY_PRICE_CAR, Cashier.HOUR_PRICE_CAR, entryDate);
+		Vehicle vehicle = new Car("ABC123", entryDate);
 		vehicle.setExitDate(exitDate);
 
-		Invoice invoice = cashier.exitVehicle(vehicle);
+		Invoice invoice = carCashier.vehicleExit(vehicle);
 		long amount = invoice.getAmount();
-		assertTrue(Cashier.HOUR_PRICE_CAR == amount);
+		assertTrue(carCashier.getHourPrice() == amount);
 	}
 
 	@Test
 	public void carExitByDayTest() {
-		Cashier cashier = new Cashier();
+		carCashier.getVehicleList().clear();
 		Calendar calendar = Calendar.getInstance();
 		Date entryDate = calendar.getTime();
 
@@ -88,11 +93,11 @@ public class CashierTests {
 
 		Date exitDate = calendar.getTime();
 
-		Vehicle vehicle = new Car("ABC123", Cashier.DAY_PRICE_CAR, Cashier.HOUR_PRICE_CAR, entryDate);
+		Vehicle vehicle = new Car("ABC123", entryDate);
 		vehicle.setExitDate(exitDate);
 
-		Invoice invoice = cashier.exitVehicle(vehicle);
+		Invoice invoice = carCashier.vehicleExit(vehicle);
 
-		assertTrue(Cashier.DAY_PRICE_CAR == invoice.getAmount());
+		assertTrue(carCashier.getDayPrice() == invoice.getAmount());
 	}
 }

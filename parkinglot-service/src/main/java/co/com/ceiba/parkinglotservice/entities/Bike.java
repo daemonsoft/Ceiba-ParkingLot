@@ -9,8 +9,8 @@ public class Bike extends Vehicle {
 		super(licensePlate);
 	}
 
-	public Bike(String licensePlate, int dayPrice, int hourPrice, Date entryDate, int engineCapacity) {
-		super(licensePlate, dayPrice, hourPrice, entryDate);
+	public Bike(String licensePlate, Date entryDate, int engineCapacity) {
+		super(licensePlate, entryDate);
 		this.engineCapacity = engineCapacity;
 	}
 }
