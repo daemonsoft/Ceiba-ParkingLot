@@ -12,5 +12,4 @@ public class ParkinglotServiceApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
-
 }
