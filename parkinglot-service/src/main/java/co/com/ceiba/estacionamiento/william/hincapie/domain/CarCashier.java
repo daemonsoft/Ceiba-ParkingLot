@@ -1,13 +1,13 @@
-package co.com.ceiba.parkinglotservice.domain;
+package co.com.ceiba.estacionamiento.william.hincapie.domain;
 
 import java.util.concurrent.TimeUnit;
 
-import co.com.ceiba.parkinglotservice.entities.Invoice;
-import co.com.ceiba.parkinglotservice.entities.Vehicle;
+import co.com.ceiba.estacionamiento.william.hincapie.entities.Invoice;
+import co.com.ceiba.estacionamiento.william.hincapie.entities.Vehicle;
 
-public class BikeCashier extends Cashier {
+public class CarCashier extends Cashier {
 
-	public BikeCashier(int maxCapacity, int hourPrice, int dayPrice) {
+	public CarCashier(int maxCapacity, int hourPrice, int dayPrice) {
 		super(maxCapacity, hourPrice, dayPrice);
 	}
 
@@ -18,6 +18,7 @@ public class BikeCashier extends Cashier {
 		}
 		vehicleList.add(vehicle);
 		return "Vehiculo ingresado";
+
 	}
 
 	public Invoice vehicleExit(Vehicle vehicle) {

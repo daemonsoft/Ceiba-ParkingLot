@@ -1,4 +1,4 @@
-package co.com.ceiba.parkinglotservice.entities;
+package co.com.ceiba.estacionamiento.william.hincapie.entities;
 
 public class Invoice {
 

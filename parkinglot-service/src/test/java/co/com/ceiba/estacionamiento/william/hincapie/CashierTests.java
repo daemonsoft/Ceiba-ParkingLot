@@ -1,4 +1,4 @@
-package co.com.ceiba.parkinglotservice;
+package co.com.ceiba.estacionamiento.william.hincapie;
 
 import static org.junit.Assert.assertTrue;
 
@@ -11,13 +11,13 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import co.com.ceiba.parkinglotservice.domain.BikeCashier;
-import co.com.ceiba.parkinglotservice.domain.CarCashier;
-import co.com.ceiba.parkinglotservice.domain.Cashier;
-import co.com.ceiba.parkinglotservice.entities.Bike;
-import co.com.ceiba.parkinglotservice.entities.Car;
-import co.com.ceiba.parkinglotservice.entities.Invoice;
-import co.com.ceiba.parkinglotservice.entities.Vehicle;
+import co.com.ceiba.estacionamiento.william.hincapie.domain.BikeCashier;
+import co.com.ceiba.estacionamiento.william.hincapie.domain.CarCashier;
+import co.com.ceiba.estacionamiento.william.hincapie.domain.Cashier;
+import co.com.ceiba.estacionamiento.william.hincapie.entities.Bike;
+import co.com.ceiba.estacionamiento.william.hincapie.entities.Car;
+import co.com.ceiba.estacionamiento.william.hincapie.entities.Invoice;
+import co.com.ceiba.estacionamiento.william.hincapie.entities.Vehicle;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

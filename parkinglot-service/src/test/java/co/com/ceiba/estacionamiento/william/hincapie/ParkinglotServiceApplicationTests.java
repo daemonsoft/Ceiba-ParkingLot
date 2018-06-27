@@ -1,4 +1,4 @@
-package co.com.ceiba.parkinglotservice;
+package co.com.ceiba.estacionamiento.william.hincapie;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

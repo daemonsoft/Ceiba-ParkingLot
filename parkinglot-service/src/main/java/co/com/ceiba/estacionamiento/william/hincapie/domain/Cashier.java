@@ -1,10 +1,10 @@
-package co.com.ceiba.parkinglotservice.domain;
+package co.com.ceiba.estacionamiento.william.hincapie.domain;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import co.com.ceiba.parkinglotservice.entities.Invoice;
-import co.com.ceiba.parkinglotservice.entities.Vehicle;
+import co.com.ceiba.estacionamiento.william.hincapie.entities.Invoice;
+import co.com.ceiba.estacionamiento.william.hincapie.entities.Vehicle;
 
 public abstract class Cashier {
 
