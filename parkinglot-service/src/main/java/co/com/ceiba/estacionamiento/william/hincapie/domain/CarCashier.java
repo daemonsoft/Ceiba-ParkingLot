@@ -34,11 +34,17 @@ public class CarCashier extends Cashier {
 
 		long seconds = TimeUnit.MILLISECONDS.toSeconds(difference);
 		long hours = (long) Math.ceil((float) seconds / 3600);
-
+		long days = (long) (float) seconds / 86400;
 		if ((hours + 1) < MINIMUN_HOURS_TO_DAY) {
 			amount = hourPrice * hours;
 		} else {
-			amount = dayPrice;
+			amount = dayPrice * days;
+			if (hours > 24) {
+				for (int i = 0; i < days; i++) {
+					hours = hours - 24;
+				}
+				amount = amount + hourPrice * hours;
+			}
 		}
 
 		return new Invoice(vehicle, amount);

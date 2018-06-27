@@ -109,6 +109,25 @@ public class CashierTests {
 	}
 
 	@Test
+	public void carExitExampleTest() {
+		carCashier.getVehicleList().clear();
+		Calendar calendar = Calendar.getInstance();
+		Date entryDate = calendar.getTime();
+
+		calendar.setTime(entryDate);
+		calendar.add(Calendar.HOUR, 27);
+
+		Date exitDate = calendar.getTime();
+
+		Vehicle vehicle = new Car("ABC123", entryDate);
+		vehicle.setExitDate(exitDate);
+
+		Invoice invoice = carCashier.vehicleExit(vehicle);
+
+		assertTrue(carCashier.getDayPrice() + (carCashier.getHourPrice() * 3) == invoice.getAmount());
+	}
+
+	@Test
 	public void bikeExitByHourTest() {
 		bikeCashier.getVehicleList().clear();
 		Calendar calendar = Calendar.getInstance();
@@ -182,6 +201,25 @@ public class CashierTests {
 		Invoice invoice = bikeCashier.vehicleExit(vehicle);
 		long amount = invoice.getAmount();
 		assertTrue(bikeCashier.getHourPrice() + 2000 == amount);
+	}
+
+	@Test
+	public void bikeExitHighCCExampleTest() {
+		bikeCashier.getVehicleList().clear();
+		Calendar calendar = Calendar.getInstance();
+		Date entryDate = calendar.getTime();
+
+		calendar.setTime(entryDate);
+		calendar.add(Calendar.HOUR, 10);
+
+		Date exitDate = calendar.getTime();
+
+		Vehicle vehicle = new Bike("ABC123", entryDate, 650);
+		vehicle.setExitDate(exitDate);
+
+		Invoice invoice = bikeCashier.vehicleExit(vehicle);
+		long amount = invoice.getAmount();
+		assertTrue(bikeCashier.getDayPrice() + 2000 == amount);
 	}
 
 	@Test
