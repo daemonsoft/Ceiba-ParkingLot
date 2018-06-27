@@ -9,6 +9,7 @@ public class Vehicle {
 
 	public Vehicle(String licensePlate) {
 		this.licensePlate = licensePlate;
+		this.entryDate = new Date();
 	}
 
 	public Vehicle(String licensePlate, Date entryDate) {

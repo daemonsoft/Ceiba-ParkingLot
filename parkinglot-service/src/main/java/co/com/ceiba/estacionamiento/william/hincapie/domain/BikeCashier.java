@@ -2,6 +2,7 @@ package co.com.ceiba.estacionamiento.william.hincapie.domain;
 
 import java.util.concurrent.TimeUnit;
 
+import co.com.ceiba.estacionamiento.william.hincapie.entities.Bike;
 import co.com.ceiba.estacionamiento.william.hincapie.entities.Invoice;
 import co.com.ceiba.estacionamiento.william.hincapie.entities.Vehicle;
 
@@ -32,7 +33,11 @@ public class BikeCashier extends Cashier {
 		} else {
 			amount = dayPrice;
 		}
-		Invoice invoice = new Invoice(vehicle, amount);
-		return invoice;
+
+		if (((Bike) vehicle).getEngineCapacity() > 500) {
+			amount = amount + 2000;
+		}
+
+		return new Invoice(vehicle, amount);
 	}
 }

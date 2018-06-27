@@ -1,5 +1,6 @@
 package co.com.ceiba.estacionamiento.william.hincapie.domain;
 
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import co.com.ceiba.estacionamiento.william.hincapie.entities.Invoice;
@@ -13,8 +14,14 @@ public class CarCashier extends Cashier {
 
 	public String vehicleEntry(Vehicle vehicle) {
 
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(vehicle.getEntryDate());
 		if (vehicleList.size() == this.getMaxCapacity()) {
 			return "No hay cupos disponibles";
+		} else if (vehicle.getLicensePlate().toUpperCase().startsWith("A")
+				&& (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
+						|| calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY)) {
+			return "No autorizado";
 		}
 		vehicleList.add(vehicle);
 		return "Vehiculo ingresado";
