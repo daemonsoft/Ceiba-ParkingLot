@@ -1,7 +1,6 @@
 package co.com.ceiba.estacionamiento.william.hincapie;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -9,9 +8,9 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
 import co.com.ceiba.estacionamiento.william.hincapie.domain.BikeCashier;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.CarCashier;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Cashier;
@@ -194,7 +193,7 @@ public class CashierTests {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(2018, Calendar.JUNE, 24);
 		vehicle = new Car("ABC123", calendar.getTime());
-		
+
 		carEntryResponse = carCashier.vehicleEntry(vehicle);
 
 		assertTrue("No autorizado".equals(carEntryResponse));

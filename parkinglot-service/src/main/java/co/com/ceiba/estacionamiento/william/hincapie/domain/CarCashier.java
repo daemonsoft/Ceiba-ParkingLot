@@ -40,7 +40,7 @@ public class CarCashier extends Cashier {
 		} else {
 			amount = dayPrice;
 		}
-		Invoice invoice = new Invoice(vehicle, amount);
-		return invoice;
+
+		return new Invoice(vehicle, amount);
 	}
 }
