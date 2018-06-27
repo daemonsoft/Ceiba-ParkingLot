@@ -12,22 +12,6 @@ public class CarCashier extends Cashier {
 		super(maxCapacity, hourPrice, dayPrice);
 	}
 
-	public String vehicleEntry(Vehicle vehicle) {
-
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(vehicle.getEntryDate());
-		if (vehicleList.size() == this.getMaxCapacity()) {
-			return "No hay cupos disponibles";
-		} else if (vehicle.getLicensePlate().toUpperCase().startsWith("A")
-				&& (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
-						|| calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY)) {
-			return "No autorizado";
-		}
-		vehicleList.add(vehicle);
-		return "Vehiculo ingresado";
-
-	}
-
 	public Invoice vehicleExit(Vehicle vehicle) {
 		long amount = 0;
 		long difference = vehicle.getExitDate().getTime() - vehicle.getEntryDate().getTime();
