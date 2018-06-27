@@ -29,7 +29,7 @@ pipeline {
 		 stage('Unit Tests') {
 			 steps{
 			 	echo "------------>Unit Tests<------------"
-			 	sh 'gradle --b ./parkinglot-service/build.gradle test'
+			 	sh 'gradle test'
 			 }
 		 }
 		 stage('Integration Tests') {
