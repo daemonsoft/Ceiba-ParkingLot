@@ -25,7 +25,9 @@ repositories {
 
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter')
+	compile('org.springframework.boot:spring-boot-starter-webflux')
+	compile("org.springframework.boot:spring-boot-starter-hateoas")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('io.projectreactor:reactor-test')
 	testCompile ('org.mockito:mockito-core:2.+')
 }
