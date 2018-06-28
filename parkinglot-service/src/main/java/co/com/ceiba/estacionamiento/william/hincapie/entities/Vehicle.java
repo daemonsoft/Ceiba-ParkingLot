@@ -2,10 +2,17 @@ package co.com.ceiba.estacionamiento.william.hincapie.entities;
 
 import java.util.Date;
 
-public class Vehicle {
+import org.springframework.data.annotation.Id;
+import org.springframework.hateoas.ResourceSupport;
+
+public class Vehicle extends ResourceSupport {
+	@Id
 	private String licensePlate;
 	private Date entryDate;
 	private Date exitDate;
+
+	public Vehicle() {
+	}
 
 	public Vehicle(String licensePlate) {
 		this.licensePlate = licensePlate;
@@ -32,4 +39,17 @@ public class Vehicle {
 	public void setExitDate(Date exitDate) {
 		this.exitDate = exitDate;
 	}
+
+	public boolean equals(Object object) {
+
+		if (!super.equals(object)) {
+			return false;
+		}
+		Vehicle vehicleObject = (Vehicle) object;
+		if (licensePlate.equals(vehicleObject.getLicensePlate())) {
+			return true;
+		}
+		return false;
+	}
+
 }

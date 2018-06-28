@@ -8,6 +8,11 @@ public class Bike extends Vehicle {
 	public Bike(String licensePlate) {
 		super(licensePlate);
 	}
+	
+	public Bike(String licensePlate, int engineCapacity) {
+		super(licensePlate);
+		this.engineCapacity = engineCapacity;
+	}
 
 	public Bike(String licensePlate, Date entryDate, int engineCapacity) {
 		super(licensePlate, entryDate);

@@ -38,6 +38,13 @@ public class CashierTests {
 		Vehicle vehicle = new Car("ABC123");
 		assertTrue("Vehiculo ingresado".equals(carCashier.vehicleEntry(vehicle)));
 	}
+	
+	@Test
+	public void vehicleEntryTest() {
+		carCashier.getVehicleList().clear();
+		Vehicle vehicle = new Vehicle("ABC123");
+		assertTrue("Vehiculo ingresado".equals(carCashier.vehicleEntry(vehicle)));
+	}
 
 	@Test
 	public void bikeEntryTest() {
@@ -127,6 +134,25 @@ public class CashierTests {
 		assertTrue(carCashier.getDayPrice() + (carCashier.getHourPrice() * 3) == invoice.getAmount());
 	}
 
+	@Test
+	public void bikeExitExampleTest() {
+		carCashier.getVehicleList().clear();
+		Calendar calendar = Calendar.getInstance();
+		Date entryDate = calendar.getTime();
+
+		calendar.setTime(entryDate);
+		calendar.add(Calendar.HOUR, 27);
+
+		Date exitDate = calendar.getTime();
+
+		Vehicle vehicle = new Bike("ABC123", entryDate,125);
+		vehicle.setExitDate(exitDate);
+
+		Invoice invoice = carCashier.vehicleExit(vehicle);
+
+		assertTrue(carCashier.getDayPrice() + (carCashier.getHourPrice() * 3) == invoice.getAmount());
+	}
+	
 	@Test
 	public void bikeExitByHourTest() {
 		bikeCashier.getVehicleList().clear();
