@@ -5,10 +5,14 @@ import java.util.Date;
 public class Bike extends Vehicle {
 	private int engineCapacity;
 
+	public Bike() {
+
+	}
+
 	public Bike(String licensePlate) {
 		super(licensePlate);
 	}
-	
+
 	public Bike(String licensePlate, int engineCapacity) {
 		super(licensePlate);
 		this.engineCapacity = engineCapacity;

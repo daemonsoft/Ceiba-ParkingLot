@@ -12,6 +12,4 @@ public interface VehicleRepository extends MongoRepository<Vehicle, String> {
 
 	public Vehicle findByLicensePlate(String licensePlate);
 
-	public List<Vehicle> findAllVehicles();
-
 }

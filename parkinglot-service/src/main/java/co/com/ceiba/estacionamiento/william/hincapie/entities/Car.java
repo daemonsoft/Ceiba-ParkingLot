@@ -4,6 +4,10 @@ import java.util.Date;
 
 public class Car extends Vehicle {
 
+	public Car() {
+
+	}
+
 	public Car(String licensePlate) {
 		super(licensePlate);
 	}

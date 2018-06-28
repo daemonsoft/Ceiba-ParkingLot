@@ -5,12 +5,16 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.hateoas.ResourceSupport;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public class Vehicle extends ResourceSupport {
+
 	@Id
 	private String licensePlate;
 	private Date entryDate;
 	private Date exitDate;
-
+	
+	@JsonCreator
 	public Vehicle() {
 	}
 
@@ -40,6 +44,7 @@ public class Vehicle extends ResourceSupport {
 		this.exitDate = exitDate;
 	}
 
+	@Override
 	public boolean equals(Object object) {
 
 		if (!super.equals(object)) {
@@ -50,6 +55,11 @@ public class Vehicle extends ResourceSupport {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 }
