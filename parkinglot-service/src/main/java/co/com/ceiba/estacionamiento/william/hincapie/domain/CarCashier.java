@@ -1,6 +1,5 @@
 package co.com.ceiba.estacionamiento.william.hincapie.domain;
 
-import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import co.com.ceiba.estacionamiento.william.hincapie.entities.Invoice;
