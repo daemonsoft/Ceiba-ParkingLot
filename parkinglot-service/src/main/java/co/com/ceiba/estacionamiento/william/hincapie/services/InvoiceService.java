@@ -38,6 +38,11 @@ public class InvoiceService {
     }
 
     public Invoice getInvoiceByVehicle(Vehicle vehicle) {
-        return invoiceRepository.findByVehicle(vehicle);
+        for (Invoice invoice : getAllCurrentInvoices()) {
+            if (vehicle.equals(invoice.getVehicle())) {
+                return invoice;
+            }
+        }
+        return null;
     }
 }

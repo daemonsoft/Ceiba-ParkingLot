@@ -50,7 +50,6 @@ public class CashierTests {
         invoice = new Invoice(bike, new Date());
         when(vehicleServiceMock.generateInvoice(invoice)).thenReturn("Vehiculo ingresado");
         assertEquals("Vehiculo ingresado", vehicleServiceMock.generateInvoice(invoice));
-
     }
 
     @Test
