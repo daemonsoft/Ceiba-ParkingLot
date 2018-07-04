@@ -1,15 +1,15 @@
 package co.com.ceiba.estacionamiento.william.hincapie.data;
 
+import co.com.ceiba.estacionamiento.william.hincapie.domain.Vehicle;
+import co.com.ceiba.estacionamiento.william.hincapie.domain.VehicleType;
+import org.springframework.data.repository.CrudRepository;
+
 import java.util.List;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
-import co.com.ceiba.estacionamiento.william.hincapie.entities.Vehicle;
+public interface VehicleRepository extends CrudRepository<Vehicle, Long> {
 
-@Repository
-public interface VehicleRepository extends MongoRepository<Vehicle, String> {
+    List<Vehicle> findAllByType(VehicleType type);
 
-	public Vehicle findByLicensePlate(String licensePlate);
-
+    Vehicle findByLicensePlate(String licensePlate);
 }

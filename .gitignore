@@ -1,5 +1,7 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
+/.gradle/
+/bin/
 
 ### STS ###
 .apt_generated
@@ -100,3 +102,5 @@ fabric.properties
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+parkinglot-service/src/main/java/co/com/ceiba/estacionamiento/william/hincapie/data/InvoiceRepository.java
+parkinglot-service/src/main/java/co/com/ceiba/estacionamiento/william/hincapie/services/

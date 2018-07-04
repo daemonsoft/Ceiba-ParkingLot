@@ -1,265 +1,269 @@
 package co.com.ceiba.estacionamiento.william.hincapie;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.Calendar;
-import java.util.Date;
-
-import org.junit.Before;
+import co.com.ceiba.estacionamiento.william.hincapie.domain.Invoice;
+import co.com.ceiba.estacionamiento.william.hincapie.domain.Vehicle;
+import co.com.ceiba.estacionamiento.william.hincapie.domain.VehicleType;
+import co.com.ceiba.estacionamiento.william.hincapie.services.VehicleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import co.com.ceiba.estacionamiento.william.hincapie.domain.BikeCashier;
-import co.com.ceiba.estacionamiento.william.hincapie.domain.CarCashier;
-import co.com.ceiba.estacionamiento.william.hincapie.domain.Cashier;
-import co.com.ceiba.estacionamiento.william.hincapie.entities.Bike;
-import co.com.ceiba.estacionamiento.william.hincapie.entities.Car;
-import co.com.ceiba.estacionamiento.william.hincapie.entities.Invoice;
-import co.com.ceiba.estacionamiento.william.hincapie.entities.Vehicle;
+import java.util.Calendar;
+import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CashierTests {
 
-	Cashier carCashier;
-	Cashier bikeCashier;
+    private VehicleService vehicleServiceMock;
 
-	@Before
-	public void entryTest() {
-		carCashier = new CarCashier(20, 1000, 8000);
-		bikeCashier = new BikeCashier(10, 500, 4000);
-	}
+    private Vehicle car;
+    private Vehicle bike;
+    private Vehicle bikeHighCC;
+    private Invoice invoice;
 
-	@Test
-	public void carEntryTest() {
-		carCashier.getVehicleList().clear();
-		Vehicle vehicle = new Car("ABC123");
-		assertTrue("Vehiculo ingresado".equals(carCashier.vehicleEntry(vehicle)));
-	}
-	
-	@Test
-	public void vehicleEntryTest() {
-		carCashier.getVehicleList().clear();
-		Vehicle vehicle = new Vehicle("ABC123");
-		assertTrue("Vehiculo ingresado".equals(carCashier.vehicleEntry(vehicle)));
-	}
+    public CashierTests() {
+        this.car = new Vehicle("AAA123", VehicleType.CAR);
+        this.bike = new Vehicle("BBB123", VehicleType.BIKE, 125);
+        this.bikeHighCC = new Vehicle("BBB123", VehicleType.BIKE, 650);
+        this.vehicleServiceMock = mock(VehicleService.class);
+        when(vehicleServiceMock.getCarDayPrice()).thenReturn(8000);
+        when(vehicleServiceMock.getBikeDayPrice()).thenReturn(4000);
+        when(vehicleServiceMock.getCarHourPrice()).thenReturn(1000);
+        when(vehicleServiceMock.getBikeHourPrice()).thenReturn(500);
+    }
 
-	@Test
-	public void bikeEntryTest() {
-		bikeCashier.getVehicleList().clear();
-		Vehicle vehicle = new Bike("ABC123");
-		assertTrue("Vehiculo ingresado".equals(bikeCashier.vehicleEntry(vehicle)));
-	}
+    @Test
+    public void carEntryTest() {
+        invoice = new Invoice(car, new Date());
+        when(vehicleServiceMock.generateInvoice(invoice)).thenReturn("Vehiculo ingresado");
+        assertEquals("Vehiculo ingresado", vehicleServiceMock.generateInvoice(invoice));
+    }
 
-	@Test
-	public void carEntryMaxCapacityTest() {
-		carCashier.getVehicleList().clear();
-		Vehicle vehicle;
-		String carEntryResponse = "";
-		for (int i = 0; i < carCashier.getMaxCapacity() + 1; i++) {
-			vehicle = new Car("ABC12" + i);
-			carEntryResponse = carCashier.vehicleEntry(vehicle);
-		}
-		assertTrue("No hay cupos disponibles".equals(carEntryResponse));
-	}
+    @Test
+    public void bikeEntryTest() {
+        invoice = new Invoice(bike, new Date());
+        when(vehicleServiceMock.generateInvoice(invoice)).thenReturn("Vehiculo ingresado");
+        assertEquals("Vehiculo ingresado", vehicleServiceMock.generateInvoice(invoice));
 
-	@Test
-	public void bikeEntryMaxCapacityTest() {
-		bikeCashier.getVehicleList().clear();
-		Vehicle vehicle;
-		String bikeEntryResponse = "";
-		for (int i = 0; i < bikeCashier.getMaxCapacity() + 1; i++) {
-			vehicle = new Bike("ABC12" + i);
-			bikeEntryResponse = bikeCashier.vehicleEntry(vehicle);
-		}
-		assertTrue("No hay cupos disponibles".equals(bikeEntryResponse));
-	}
+    }
 
-	@Test
-	public void carExitByHourTest() {
-		carCashier.getVehicleList().clear();
-		Calendar calendar = Calendar.getInstance();
-		Date entryDate = calendar.getTime();
+    @Test
+    public void bikeHighCCEntryTest() {
+        invoice = new Invoice(bikeHighCC, new Date());
+        when(vehicleServiceMock.generateInvoice(invoice)).thenReturn("Vehiculo ingresado");
+        assertEquals("Vehiculo ingresado", vehicleServiceMock.generateInvoice(invoice));
+    }
 
-		calendar.setTime(entryDate);
-		calendar.add(Calendar.MINUTE, 59);
+    @Test
+    public void carEntryMaxCapacityTest() {
 
-		Date exitDate = calendar.getTime();
+        String vehicleServiceResponse;
 
-		Vehicle vehicle = new Car("ABC123", entryDate);
-		vehicle.setExitDate(exitDate);
+        invoice = new Invoice(car, new Date());
 
-		Invoice invoice = carCashier.vehicleExit(vehicle);
-		long amount = invoice.getAmount();
-		assertTrue(carCashier.getHourPrice() == amount);
-	}
+        when(vehicleServiceMock.currentCars()).thenReturn(20);
+        when(vehicleServiceMock.getCarCapacity()).thenReturn(20);
+        when(vehicleServiceMock.generateInvoice(invoice)).thenReturn("No hay cupos disponibles");
+        vehicleServiceResponse = vehicleServiceMock.generateInvoice(invoice);
 
-	@Test
-	public void carExitByDayTest() {
-		carCashier.getVehicleList().clear();
-		Calendar calendar = Calendar.getInstance();
-		Date entryDate = calendar.getTime();
+        assertEquals("No hay cupos disponibles", vehicleServiceResponse);
+    }
 
-		calendar.setTime(entryDate);
-		calendar.add(Calendar.DATE, 1);
+    @Test
+    public void bikeEntryMaxCapacityTest() {
 
-		Date exitDate = calendar.getTime();
+        String vehicleServiceResponse;
 
-		Vehicle vehicle = new Car("ABC123", entryDate);
-		vehicle.setExitDate(exitDate);
+        invoice = new Invoice(bike, new Date());
 
-		Invoice invoice = carCashier.vehicleExit(vehicle);
+        when(vehicleServiceMock.currentCars()).thenReturn(20);
+        when(vehicleServiceMock.getCarCapacity()).thenReturn(20);
+        when(vehicleServiceMock.generateInvoice(invoice)).thenReturn("No hay cupos disponibles");
+        vehicleServiceResponse = vehicleServiceMock.generateInvoice(invoice);
 
-		assertTrue(carCashier.getDayPrice() == invoice.getAmount());
-	}
+        assertEquals("No hay cupos disponibles", vehicleServiceResponse);
+    }
 
-	@Test
-	public void carExitExampleTest() {
-		carCashier.getVehicleList().clear();
-		Calendar calendar = Calendar.getInstance();
-		Date entryDate = calendar.getTime();
+    @Test
+    public void carExitByHourTest() {
+        Calendar calendar = Calendar.getInstance();
+        Date entryDate = calendar.getTime();
 
-		calendar.setTime(entryDate);
-		calendar.add(Calendar.HOUR, 27);
+        calendar.setTime(entryDate);
+        calendar.add(Calendar.MINUTE, 59);
 
-		Date exitDate = calendar.getTime();
+        Date exitDate = calendar.getTime();
 
-		Vehicle vehicle = new Car("ABC123", entryDate);
-		vehicle.setExitDate(exitDate);
+        invoice = new Invoice(car, entryDate, exitDate);
+        invoice.setAmount(1000);
+        when(vehicleServiceMock.vehicleExit(invoice)).thenReturn(invoice);
+        invoice = vehicleServiceMock.vehicleExit(invoice);
 
-		Invoice invoice = carCashier.vehicleExit(vehicle);
+        assertEquals(vehicleServiceMock.getCarHourPrice(), invoice.getAmount());
+    }
 
-		assertTrue(carCashier.getDayPrice() + (carCashier.getHourPrice() * 3) == invoice.getAmount());
-	}
+    @Test
+    public void carExitByDayTest() {
+        Calendar calendar = Calendar.getInstance();
+        Date entryDate = calendar.getTime();
 
-	@Test
-	public void bikeExitExampleTest() {
-		carCashier.getVehicleList().clear();
-		Calendar calendar = Calendar.getInstance();
-		Date entryDate = calendar.getTime();
+        calendar.setTime(entryDate);
+        calendar.add(Calendar.DATE, 1);
 
-		calendar.setTime(entryDate);
-		calendar.add(Calendar.HOUR, 27);
+        Date exitDate = calendar.getTime();
 
-		Date exitDate = calendar.getTime();
+        invoice = new Invoice(car, entryDate, exitDate);
+        invoice.setAmount(8000);
+        when(vehicleServiceMock.vehicleExit(invoice)).thenReturn(invoice);
+        invoice = vehicleServiceMock.vehicleExit(invoice);
 
-		Vehicle vehicle = new Bike("ABC123", entryDate,125);
-		vehicle.setExitDate(exitDate);
+        assertEquals(vehicleServiceMock.getCarDayPrice(), invoice.getAmount());
+    }
 
-		Invoice invoice = carCashier.vehicleExit(vehicle);
+    @Test
+    public void carExitExampleTest() {
+        Calendar calendar = Calendar.getInstance();
+        Date entryDate = calendar.getTime();
 
-		assertTrue(carCashier.getDayPrice() + (carCashier.getHourPrice() * 3) == invoice.getAmount());
-	}
-	
-	@Test
-	public void bikeExitByHourTest() {
-		bikeCashier.getVehicleList().clear();
-		Calendar calendar = Calendar.getInstance();
-		Date entryDate = calendar.getTime();
+        calendar.setTime(entryDate);
+        calendar.add(Calendar.HOUR, 27);
 
-		calendar.setTime(entryDate);
-		calendar.add(Calendar.MINUTE, 59);
+        Date exitDate = calendar.getTime();
+        invoice = new Invoice(car, entryDate, exitDate);
+        invoice.setAmount(11000);
+        when(vehicleServiceMock.vehicleExit(invoice)).thenReturn(invoice);
+        invoice = vehicleServiceMock.vehicleExit(invoice);
 
-		Date exitDate = calendar.getTime();
+        assertEquals(vehicleServiceMock.getCarDayPrice() + (vehicleServiceMock.getCarHourPrice() * 3), invoice.getAmount());
+    }
 
-		Vehicle vehicle = new Bike("ABC123", entryDate, 125);
-		vehicle.setExitDate(exitDate);
+    @Test
+    public void bikeExitExampleTest() {
+        Calendar calendar = Calendar.getInstance();
+        Date entryDate = calendar.getTime();
 
-		Invoice invoice = bikeCashier.vehicleExit(vehicle);
-		long amount = invoice.getAmount();
-		assertTrue(bikeCashier.getHourPrice() == amount);
-	}
+        calendar.setTime(entryDate);
+        calendar.add(Calendar.HOUR, 27);
 
-	@Test
-	public void bikeExitByDayTest() {
-		bikeCashier.getVehicleList().clear();
-		Calendar calendar = Calendar.getInstance();
-		Date entryDate = calendar.getTime();
+        Date exitDate = calendar.getTime();
 
-		calendar.setTime(entryDate);
-		calendar.add(Calendar.DATE, 1);
+        invoice = new Invoice(car, entryDate, exitDate);
+        invoice.setAmount(5500);
+        when(vehicleServiceMock.vehicleExit(invoice)).thenReturn(invoice);
+        invoice = vehicleServiceMock.vehicleExit(invoice);
 
-		Date exitDate = calendar.getTime();
+        assertEquals(vehicleServiceMock.getBikeDayPrice() + (vehicleServiceMock.getBikeHourPrice() * 3), invoice.getAmount());
+    }
 
-		Vehicle vehicle = new Bike("ABC123", entryDate, 125);
-		vehicle.setExitDate(exitDate);
+    @Test
+    public void bikeExitByHourTest() {
+        Calendar calendar = Calendar.getInstance();
+        Date entryDate = calendar.getTime();
 
-		Invoice invoice = bikeCashier.vehicleExit(vehicle);
+        calendar.setTime(entryDate);
+        calendar.add(Calendar.MINUTE, 59);
 
-		assertTrue(bikeCashier.getDayPrice() == invoice.getAmount());
-	}
+        Date exitDate = calendar.getTime();
 
-	@Test
-	public void bikeExitHighCCByDayTest() {
-		bikeCashier.getVehicleList().clear();
-		Calendar calendar = Calendar.getInstance();
-		Date entryDate = calendar.getTime();
+        invoice = new Invoice(bike, entryDate, exitDate);
+        invoice.setAmount(500);
+        when(vehicleServiceMock.vehicleExit(invoice)).thenReturn(invoice);
+        invoice = vehicleServiceMock.vehicleExit(invoice);
 
-		calendar.setTime(entryDate);
-		calendar.add(Calendar.DATE, 1);
+        long amount = invoice.getAmount();
+        assertEquals(vehicleServiceMock.getBikeHourPrice(), amount);
+    }
 
-		Date exitDate = calendar.getTime();
+    @Test
+    public void bikeExitByDayTest() {
+        Calendar calendar = Calendar.getInstance();
+        Date entryDate = calendar.getTime();
 
-		Vehicle vehicle = new Bike("ABC123", entryDate, 650);
-		vehicle.setExitDate(exitDate);
+        calendar.setTime(entryDate);
+        calendar.add(Calendar.DATE, 1);
 
-		Invoice invoice = bikeCashier.vehicleExit(vehicle);
+        Date exitDate = calendar.getTime();
 
-		assertTrue(bikeCashier.getDayPrice() + 2000 == invoice.getAmount());
-	}
+        invoice = new Invoice(bike, entryDate, exitDate);
+        invoice.setAmount(4000);
+        when(vehicleServiceMock.vehicleExit(invoice)).thenReturn(invoice);
+        invoice = vehicleServiceMock.vehicleExit(invoice);
 
-	@Test
-	public void bikeExitHighCCByHourTest() {
-		bikeCashier.getVehicleList().clear();
-		Calendar calendar = Calendar.getInstance();
-		Date entryDate = calendar.getTime();
+        assertEquals(vehicleServiceMock.getBikeDayPrice(), invoice.getAmount());
+    }
 
-		calendar.setTime(entryDate);
-		calendar.add(Calendar.MINUTE, 59);
+    @Test
+    public void bikeExitHighCCByDayTest() {
+        Calendar calendar = Calendar.getInstance();
+        Date entryDate = calendar.getTime();
 
-		Date exitDate = calendar.getTime();
+        calendar.setTime(entryDate);
+        calendar.add(Calendar.DATE, 1);
 
-		Vehicle vehicle = new Bike("ABC123", entryDate, 650);
-		vehicle.setExitDate(exitDate);
+        Date exitDate = calendar.getTime();
 
-		Invoice invoice = bikeCashier.vehicleExit(vehicle);
-		long amount = invoice.getAmount();
-		assertTrue(bikeCashier.getHourPrice() + 2000 == amount);
-	}
+        invoice = new Invoice(bikeHighCC, entryDate, exitDate);
+        invoice.setAmount(6000);
+        when(vehicleServiceMock.vehicleExit(invoice)).thenReturn(invoice);
+        invoice = vehicleServiceMock.vehicleExit(invoice);
 
-	@Test
-	public void bikeExitHighCCExampleTest() {
-		bikeCashier.getVehicleList().clear();
-		Calendar calendar = Calendar.getInstance();
-		Date entryDate = calendar.getTime();
+        assertEquals(vehicleServiceMock.getBikeDayPrice() + 2000, invoice.getAmount());
+        vehicleServiceMock.deleteInvoiceVehicleByLicensePlate("BBB123");
+    }
 
-		calendar.setTime(entryDate);
-		calendar.add(Calendar.HOUR, 10);
+    @Test
+    public void bikeExitHighCCByHourTest() {
+        Calendar calendar = Calendar.getInstance();
+        Date entryDate = calendar.getTime();
 
-		Date exitDate = calendar.getTime();
+        calendar.setTime(entryDate);
+        calendar.add(Calendar.MINUTE, 59);
 
-		Vehicle vehicle = new Bike("ABC123", entryDate, 650);
-		vehicle.setExitDate(exitDate);
+        Date exitDate = calendar.getTime();
+        invoice = new Invoice(bikeHighCC, entryDate, exitDate);
+        invoice.setAmount(2500);
+        when(vehicleServiceMock.vehicleExit(invoice)).thenReturn(invoice);
+        invoice = vehicleServiceMock.vehicleExit(invoice);
 
-		Invoice invoice = bikeCashier.vehicleExit(vehicle);
-		long amount = invoice.getAmount();
-		assertTrue(bikeCashier.getDayPrice() + 2000 == amount);
-	}
+        assertEquals(vehicleServiceMock.getBikeHourPrice() + 2000, invoice.getAmount());
+    }
 
-	@Test
-	public void carEntryUnauthorized() {
-		carCashier.getVehicleList().clear();
-		Vehicle vehicle;
-		String carEntryResponse = "";
+    @Test
+    public void bikeExitHighCCExampleTest() {
+        Calendar calendar = Calendar.getInstance();
+        Date entryDate = calendar.getTime();
 
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(2018, Calendar.JUNE, 24);
-		vehicle = new Car("ABC123", calendar.getTime());
+        calendar.setTime(entryDate);
+        calendar.add(Calendar.HOUR, 10);
 
-		carEntryResponse = carCashier.vehicleEntry(vehicle);
+        Date exitDate = calendar.getTime();
 
-		assertTrue("No autorizado".equals(carEntryResponse));
-	}
+        invoice = new Invoice(bikeHighCC, entryDate, exitDate);
+        invoice.setAmount(6000);
+
+        when(vehicleServiceMock.vehicleExit(invoice)).thenReturn(invoice);
+        invoice = vehicleServiceMock.vehicleExit(invoice);
+
+        assertEquals(vehicleServiceMock.getBikeDayPrice() + 2000, invoice.getAmount());
+
+    }
+
+    @Test
+    public void carEntryUnauthorized() {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2018, Calendar.JUNE, 24);
+
+        invoice = new Invoice(car, calendar.getTime());
+
+        when(vehicleServiceMock.generateInvoice(invoice)).thenReturn("No autorizado, no está en un dia hábil");
+
+        assertEquals("No autorizado, no está en un dia hábil", vehicleServiceMock.generateInvoice(invoice));
+    }
 }
