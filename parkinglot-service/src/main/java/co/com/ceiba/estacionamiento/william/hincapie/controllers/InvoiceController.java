@@ -22,8 +22,15 @@ public class InvoiceController {
     private VehicleService vehicleService;
 
     @GetMapping
-    public ResponseEntity<List<Invoice>> getAllInvoices() {
+    public ResponseEntity<List<Invoice>> getOpenInvoices() {
         List<Invoice> invoiceList = invoiceService.getAllCurrentInvoices();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        return new ResponseEntity<>(invoiceList, responseHeaders, HttpStatus.OK);
+    }
+
+    @GetMapping("history")
+    public ResponseEntity<List<Invoice>> getAllInvoices() {
+        List<Invoice> invoiceList = invoiceService.getAllInvoices();
         HttpHeaders responseHeaders = new HttpHeaders();
         return new ResponseEntity<>(invoiceList, responseHeaders, HttpStatus.OK);
     }
@@ -31,7 +38,6 @@ public class InvoiceController {
     @PostMapping("{licensePlate}")
     public ResponseEntity<Invoice> vehicleExit(@PathVariable String licensePlate) {
         Invoice invoice = vehicleService.getVehicleInvoice(licensePlate);
-
         if (null == invoice) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

@@ -4,7 +4,6 @@ import co.com.ceiba.estacionamiento.william.hincapie.data.VehicleRepository;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Invoice;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Vehicle;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.VehicleType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,39 +20,9 @@ public class VehicleService implements VehicleServiceInterface {
 
     private VehicleRepository vehicleRepository;
 
-    @Autowired
     private InvoiceService invoiceService;
 
     private int hoursToDay;
-
-    public void setHoursToDay(int hoursToDay) {
-        this.hoursToDay = hoursToDay;
-    }
-
-    public void setBikeCapacity(int bikeCapacity) {
-        this.bikeCapacity = bikeCapacity;
-    }
-
-    public void setCarCapacity(int carCapacity) {
-        this.carCapacity = carCapacity;
-    }
-
-    public void setBikeHourPrice(int bikeHourPrice) {
-        this.bikeHourPrice = bikeHourPrice;
-    }
-
-    public void setBikeDayPrice(int bikeDayPrice) {
-        this.bikeDayPrice = bikeDayPrice;
-    }
-
-    public void setCarHourPrice(int carHourPrice) {
-        this.carHourPrice = carHourPrice;
-    }
-
-    public void setCarDayPrice(int carDayPrice) {
-        this.carDayPrice = carDayPrice;
-    }
-
     private int bikeCapacity;
     private int carCapacity;
     private int bikeHourPrice;
@@ -61,7 +30,7 @@ public class VehicleService implements VehicleServiceInterface {
     private int carHourPrice;
     private int carDayPrice;
 
-    public VehicleService(VehicleRepository vehicleRepository) {
+    public VehicleService(VehicleRepository vehicleRepository, InvoiceService invoiceService) {
         this.hoursToDay = 9;
         this.bikeCapacity = 10;
         this.carCapacity = 20;
@@ -70,6 +39,7 @@ public class VehicleService implements VehicleServiceInterface {
         this.carHourPrice = 1000;
         this.carDayPrice = 8000;
         this.vehicleRepository = vehicleRepository;
+        this.invoiceService = invoiceService;
     }
 
     public int getBikeCapacity() {
@@ -129,7 +99,6 @@ public class VehicleService implements VehicleServiceInterface {
     }
 
     public String generateInvoice(Invoice invoice) {
-
         if (isNotValidDay(invoice)) {
             return "No autorizado, no está en un dia hábil";
         }
@@ -146,6 +115,7 @@ public class VehicleService implements VehicleServiceInterface {
         } else {
             invoice.setVehicle(vehicleRepository.save(invoice.getVehicle()));
         }
+
         if (VehicleType.CAR.equals(invoice.getVehicle().getType())) {
             if (this.getCarCapacity() == this.currentCars()) {
                 return "No hay cupos disponibles";
@@ -243,5 +213,33 @@ public class VehicleService implements VehicleServiceInterface {
                 invoiceService.deleteInvoice(invoice);
             }
         }
+    }
+
+    public void setHoursToDay(int hoursToDay) {
+        this.hoursToDay = hoursToDay;
+    }
+
+    public void setBikeCapacity(int bikeCapacity) {
+        this.bikeCapacity = bikeCapacity;
+    }
+
+    public void setCarCapacity(int carCapacity) {
+        this.carCapacity = carCapacity;
+    }
+
+    public void setBikeHourPrice(int bikeHourPrice) {
+        this.bikeHourPrice = bikeHourPrice;
+    }
+
+    public void setBikeDayPrice(int bikeDayPrice) {
+        this.bikeDayPrice = bikeDayPrice;
+    }
+
+    public void setCarHourPrice(int carHourPrice) {
+        this.carHourPrice = carHourPrice;
+    }
+
+    public void setCarDayPrice(int carDayPrice) {
+        this.carDayPrice = carDayPrice;
     }
 }
