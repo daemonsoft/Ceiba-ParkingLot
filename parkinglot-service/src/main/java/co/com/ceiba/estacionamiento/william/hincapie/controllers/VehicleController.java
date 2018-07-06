@@ -31,21 +31,10 @@ public class VehicleController {
     }
 
     @PostMapping
-    public ResponseEntity<Vehicle> vehicleEntry(@RequestBody Vehicle vehicle) {
-
+    public ResponseEntity<Vehicle> vehicleEntry(@RequestBody Vehicle vehicle) throws VehicleEntryException, VehicleNotAuthorizedException, VehicleCapacityReachedException {
         HttpHeaders responseHeaders = new HttpHeaders();
-        try {
-            vehicleService.generateInvoice(new Invoice(vehicle, new Date()));
-        } catch (VehicleEntryException e) {
-            e.printStackTrace();
-        } catch (VehicleNotAuthorizedException e) {
-            e.printStackTrace();
-        } catch (VehicleCapacityReachedException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        vehicleService.generateInvoice(new Invoice(vehicle, new Date()));
         return new ResponseEntity<>(vehicle, responseHeaders, HttpStatus.OK);
-
     }
 
     @GetMapping("{licensePlate}")
