@@ -14,16 +14,6 @@ public class Vehicle {
     private VehicleType type;
     private int engineCapacity;
 
-    public Vehicle(Integer id, String licensePlate, VehicleType type, int engineCapacity) {
-        this.id = id;
-        this.licensePlate = licensePlate;
-        this.type = type;
-        this.engineCapacity = engineCapacity;
-    }
-
-    public Vehicle() {
-    }
-
     public Vehicle(String licensePlate, VehicleType type) {
         this.licensePlate = licensePlate;
         this.type = type;

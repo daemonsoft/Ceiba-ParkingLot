@@ -2,6 +2,9 @@ package co.com.ceiba.estacionamiento.william.hincapie.controllers;
 
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Invoice;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Vehicle;
+import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleCapacityReachedException;
+import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleEntryException;
+import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleNotAuthorizedException;
 import co.com.ceiba.estacionamiento.william.hincapie.services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,13 +32,19 @@ public class VehicleController {
     @PostMapping
     public ResponseEntity<Vehicle> vehicleEntry(@RequestBody Vehicle vehicle) {
 
-        String message = vehicleService.generateInvoice(new Invoice(vehicle, new Date()));
-
         HttpHeaders responseHeaders = new HttpHeaders();
-        if ("Vehiculo ingresado".equals(message)) {
-            return new ResponseEntity<>(vehicle, responseHeaders, HttpStatus.OK);
+        try {
+            vehicleService.generateInvoice(new Invoice(vehicle, new Date()));
+        } catch (VehicleEntryException e) {
+            e.printStackTrace();
+        } catch (VehicleNotAuthorizedException e) {
+            e.printStackTrace();
+        } catch (VehicleCapacityReachedException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(vehicle, responseHeaders, HttpStatus.OK);
+
     }
 
     @GetMapping("{licensePlate}")

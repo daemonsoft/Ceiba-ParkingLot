@@ -4,6 +4,9 @@ import co.com.ceiba.estacionamiento.william.hincapie.data.VehicleRepository;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Invoice;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Vehicle;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.VehicleType;
+import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleCapacityReachedException;
+import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleEntryException;
+import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleNotAuthorizedException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,10 +16,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class VehicleService implements VehicleServiceInterface {
-
-
-    public static final String VEHICULO_INGRESADO = "Vehiculo ingresado";
+public class VehicleService {
 
     private VehicleRepository vehicleRepository;
 
@@ -98,9 +98,9 @@ public class VehicleService implements VehicleServiceInterface {
                 || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY));
     }
 
-    public String generateInvoice(Invoice invoice) {
+    public void generateInvoice(Invoice invoice) throws VehicleEntryException, VehicleNotAuthorizedException, VehicleCapacityReachedException {
         if (isNotValidDay(invoice)) {
-            return "No autorizado, no está en un dia hábil";
+            throw new VehicleNotAuthorizedException();
         }
         Vehicle vehicle = vehicleRepository.findByLicensePlate(invoice.getVehicle().getLicensePlate());
 
@@ -109,7 +109,7 @@ public class VehicleService implements VehicleServiceInterface {
 
             for (Invoice i : invoiceService.getAllCurrentInvoices()) {
                 if (vehicle.getLicensePlate().equals(i.getVehicle().getLicensePlate())) {
-                    return VEHICULO_INGRESADO;
+                    return;
                 }
             }
         } else {
@@ -118,18 +118,18 @@ public class VehicleService implements VehicleServiceInterface {
 
         if (VehicleType.CAR.equals(invoice.getVehicle().getType())) {
             if (this.getCarCapacity() == this.currentCars()) {
-                return "No hay cupos disponibles";
+                throw new VehicleCapacityReachedException();
             }
             invoiceService.saveInvoice(invoice);
-            return VEHICULO_INGRESADO;
+            return;
         } else if (VehicleType.BIKE.equals(invoice.getVehicle().getType())) {
             if (this.getBikeCapacity() == this.currentBikes()) {
-                return "No hay cupos disponibles";
+                throw new VehicleCapacityReachedException();
             }
             invoiceService.saveInvoice(invoice);
-            return VEHICULO_INGRESADO;
+            return;
         }
-        return "Error ingresando";
+        throw new VehicleEntryException();
     }
 
     public Vehicle getVehicle(String licensePlate) {
@@ -205,41 +205,5 @@ public class VehicleService implements VehicleServiceInterface {
         }
 
         invoice.setAmount(amount);
-    }
-
-    public void deleteInvoiceVehicleByLicensePlate(String licensePlate) {
-        for (Invoice invoice : invoiceService.getAllCurrentInvoices()) {
-            if (licensePlate.equals(invoice.getVehicle().getLicensePlate())) {
-                invoiceService.deleteInvoice(invoice);
-            }
-        }
-    }
-
-    public void setHoursToDay(int hoursToDay) {
-        this.hoursToDay = hoursToDay;
-    }
-
-    public void setBikeCapacity(int bikeCapacity) {
-        this.bikeCapacity = bikeCapacity;
-    }
-
-    public void setCarCapacity(int carCapacity) {
-        this.carCapacity = carCapacity;
-    }
-
-    public void setBikeHourPrice(int bikeHourPrice) {
-        this.bikeHourPrice = bikeHourPrice;
-    }
-
-    public void setBikeDayPrice(int bikeDayPrice) {
-        this.bikeDayPrice = bikeDayPrice;
-    }
-
-    public void setCarHourPrice(int carHourPrice) {
-        this.carHourPrice = carHourPrice;
-    }
-
-    public void setCarDayPrice(int carDayPrice) {
-        this.carDayPrice = carDayPrice;
     }
 }

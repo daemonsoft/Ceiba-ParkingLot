@@ -4,6 +4,9 @@ import co.com.ceiba.estacionamiento.william.hincapie.data.VehicleRepository;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Invoice;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Vehicle;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.VehicleType;
+import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleCapacityReachedException;
+import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleEntryException;
+import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleNotAuthorizedException;
 import co.com.ceiba.estacionamiento.william.hincapie.services.InvoiceService;
 import co.com.ceiba.estacionamiento.william.hincapie.services.VehicleService;
 import org.junit.Before;
@@ -17,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class VehicleServiceTests {
@@ -54,25 +58,34 @@ public class VehicleServiceTests {
     }
 
     @Test
-    public void carEntryTest() {
+    public void carEntryTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException {
         invoice = new Invoice(car, new Date());
-        assertEquals("Vehiculo ingresado", vehicleService.generateInvoice(invoice));
+
+        vehicleService.generateInvoice(invoice);
     }
 
     @Test
-    public void bikeEntryTest() {
+    public void bikeEntryTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException {
         invoice = new Invoice(bike, new Date());
-        assertEquals("Vehiculo ingresado", vehicleService.generateInvoice(invoice));
+
+        vehicleService.generateInvoice(invoice);
+
     }
 
     @Test
     public void bikeHighCCEntryTest() {
         invoice = new Invoice(bikeHighCC, new Date());
-        assertEquals("Vehiculo ingresado", vehicleService.generateInvoice(invoice));
+        boolean checkException = true;
+        try {
+            vehicleService.generateInvoice(invoice);
+        } catch (VehicleEntryException | VehicleNotAuthorizedException | VehicleCapacityReachedException e) {
+            checkException = false;
+        }
+        assertTrue(checkException);
     }
 
-    @Test
-    public void carEntryMaxCapacityTest() {
+    @Test(expected = VehicleCapacityReachedException.class)
+    public void carEntryMaxCapacityTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException {
         List<Invoice> invoiceList = new ArrayList<>();
         for (int i = 0; i < vehicleService.getCarCapacity(); i++) {
             invoice = new Invoice(new Vehicle("AAK123", VehicleType.CAR), new Date());
@@ -82,11 +95,12 @@ public class VehicleServiceTests {
 
         invoice = new Invoice(car, new Date());
 
-        assertEquals("No hay cupos disponibles", vehicleService.generateInvoice(invoice));
+        vehicleService.generateInvoice(invoice);
+
     }
 
-    @Test
-    public void bikeEntryMaxCapacityTest() {
+    @Test(expected = VehicleCapacityReachedException.class)
+    public void bikeEntryMaxCapacityTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException {
         List<Invoice> invoiceList = new ArrayList<>();
         for (int i = 0; i < vehicleService.getBikeCapacity(); i++) {
             invoice = new Invoice(new Vehicle("BBK123", VehicleType.BIKE, 125), new Date());
@@ -96,7 +110,8 @@ public class VehicleServiceTests {
 
         invoice = new Invoice(bike, new Date());
 
-        assertEquals("No hay cupos disponibles", vehicleService.generateInvoice(invoice));
+        vehicleService.generateInvoice(invoice);
+
     }
 
     @Test
@@ -244,14 +259,14 @@ public class VehicleServiceTests {
 
     }
 
-    @Test
-    public void carEntryUnauthorized() {
+    @Test(expected = VehicleNotAuthorizedException.class)
+    public void carEntryUnauthorized() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2018, Calendar.JUNE, 24);
 
         invoice = new Invoice(car, calendar.getTime());
 
-        assertEquals("No autorizado, no está en un dia hábil", vehicleService.generateInvoice(invoice));
+        vehicleService.generateInvoice(invoice);
     }
 }

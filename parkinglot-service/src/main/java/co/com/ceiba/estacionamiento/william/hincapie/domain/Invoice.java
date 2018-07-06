@@ -15,17 +15,6 @@ public class Invoice {
     private Date exitDate;
     private long amount;
 
-    public Invoice() {
-    }
-
-    public Invoice(Integer id, Vehicle vehicle, Date entryDate, Date exitDate, long amount) {
-        this.id = id;
-        this.vehicle = vehicle;
-        this.entryDate = entryDate;
-        this.exitDate = exitDate;
-        this.amount = amount;
-    }
-
     public Invoice(Vehicle vehicle, Date entryDate) {
         this.vehicle = vehicle;
         this.entryDate = entryDate;
