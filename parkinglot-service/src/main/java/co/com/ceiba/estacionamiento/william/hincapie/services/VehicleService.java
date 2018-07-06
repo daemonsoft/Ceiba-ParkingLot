@@ -66,7 +66,7 @@ public class VehicleService {
         return carDayPrice;
     }
 
-    public int currentBikes() {
+    private int currentBikes() {
         int counter = 0;
 
         for (Invoice invoice : invoiceService.getAllCurrentInvoices()) {
@@ -77,7 +77,7 @@ public class VehicleService {
         return counter;
     }
 
-    public int currentCars() {
+    private int currentCars() {
 
         int counter = 0;
 
@@ -89,7 +89,7 @@ public class VehicleService {
         return counter;
     }
 
-    public boolean isNotValidDay(Invoice invoice) {
+    private boolean isNotValidDay(Invoice invoice) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(invoice.getEntryDate());
 
@@ -162,7 +162,7 @@ public class VehicleService {
         return invoice;
     }
 
-    public void calculateAmount(Invoice invoice) {
+    private void calculateAmount(Invoice invoice) {
 
         if (null == invoice.getExitDate()) {
             invoice.setExitDate(new Date());

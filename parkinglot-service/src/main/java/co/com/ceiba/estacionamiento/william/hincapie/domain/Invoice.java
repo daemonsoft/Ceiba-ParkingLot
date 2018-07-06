@@ -26,12 +26,19 @@ public class Invoice {
         this.exitDate = exitDate;
     }
 
+    public Invoice() {
+    }
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public void setEntryDate(Date entryDate) {
+        this.entryDate = entryDate;
     }
 
     public Vehicle getVehicle() {
@@ -44,10 +51,6 @@ public class Invoice {
 
     public Date getEntryDate() {
         return entryDate;
-    }
-
-    public void setEntryDate(Date entryDate) {
-        this.entryDate = entryDate;
     }
 
     public Date getExitDate() {

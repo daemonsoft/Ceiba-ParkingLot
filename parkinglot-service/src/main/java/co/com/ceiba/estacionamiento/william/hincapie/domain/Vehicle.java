@@ -15,15 +15,17 @@ public class Vehicle {
     private int engineCapacity;
 
     public Vehicle(String licensePlate, VehicleType type) {
-        this.licensePlate = licensePlate;
+        this.licensePlate = licensePlate.toUpperCase();
         this.type = type;
     }
 
     public Vehicle(String licensePlate, VehicleType type, int engineCapacity) {
-        this.licensePlate = licensePlate;
+        this.licensePlate = licensePlate.toUpperCase();
         this.type = type;
         this.engineCapacity = engineCapacity;
+    }
 
+    public Vehicle() {
     }
 
     public Integer getId() {
@@ -38,20 +40,20 @@ public class Vehicle {
         return licensePlate;
     }
 
-    public void setLicensePlate(String licensePlate) {
-        this.licensePlate = licensePlate;
-    }
-
     public VehicleType getType() {
         return type;
     }
 
-    public void setType(VehicleType type) {
-        this.type = type;
-    }
-
     public int getEngineCapacity() {
         return engineCapacity;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate.toUpperCase();
+    }
+
+    public void setType(VehicleType type) {
+        this.type = type;
     }
 
     public void setEngineCapacity(int engineCapacity) {

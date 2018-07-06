@@ -29,12 +29,8 @@ public class InvoiceService {
         return invoiceList;
     }
 
-    public Invoice saveInvoice(Invoice invoice) {
-        return invoiceRepository.save(invoice);
-    }
-
-    public void deleteInvoice(Invoice invoice) {
-        invoiceRepository.delete(invoice);
+    void saveInvoice(Invoice invoice) {
+        invoiceRepository.save(invoice);
     }
 
     public Invoice getInvoiceByVehicle(Vehicle vehicle) {

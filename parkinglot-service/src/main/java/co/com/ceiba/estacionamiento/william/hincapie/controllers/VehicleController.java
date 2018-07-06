@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/vehicle")
 public class VehicleController {
 
