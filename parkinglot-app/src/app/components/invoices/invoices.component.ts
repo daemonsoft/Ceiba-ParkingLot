@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { InvoiceService } from '../../services/invoice.service';
 import { Vehicle } from '../vehicles/vehicles.component';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource } from '@angular/material';
 
 export interface Invoice {
   id: number;
@@ -17,16 +17,15 @@ export interface Invoice {
 })
 export class InvoicesComponent implements OnInit {
   invoices = new MatTableDataSource<Invoice>(this.invoices);
-  displayedColumns: string[] = ['id', 'vehicle', 'type', 'entryDate', 'exitDate'];
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
+  displayedColumns: string[] = ['id', 'vehicle', 'type', 'entryDate'];
+  @ViewChild(MatSort) sort: MatSort;
   constructor(private service: InvoiceService) { }
 
   ngOnInit() {
-    this.service.getAll()
+    this.service.getAllCurrent()
       .subscribe(invoices => {
         this.invoices = invoices.json();
-        this.invoices.paginator = this.paginator;
+        this.invoices.sort = this.sort;
       });
   }
 }

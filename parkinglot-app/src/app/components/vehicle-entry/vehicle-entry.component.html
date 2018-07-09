@@ -1,21 +1,21 @@
 <div class="entry-container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
     <div fxLayout="row" fxLayout.xs="column">
         <mat-form-field fxLayout.xs="column">
-            <input matInput placeholder="Placa" [(ngModel)]="licensePlate" type="text">
+            <input matInput placeholder="Placa" [(ngModel)]="licensePlate" type="text" #licensePlateInput>
         </mat-form-field>
         <div fxLayout.xs="column">
-            <button mat-raised-button color="primary" (click)="saveCar($event)">Car</button>
+            <button mat-raised-button color="primary" (click)="saveCar(licensePlateInput)">Car</button>
         </div>
         <div fxLayout.xs="column">
-            <button mat-raised-button color="primary" (click)="saveBike($event)">Bike</button>
+            <button mat-raised-button color="primary" (click)="saveBike(licensePlateInput)">Bike</button>
         </div>
         <div fxLayout.xs="column">
-            <button mat-raised-button color="primary" (click)="saveBigBike($event)">BigBike</button>
+            <button mat-raised-button color="primary" (click)="saveBigBike(licensePlateInput)">BigBike</button>
         </div>
     </div>
     <div fxLayout="row" fxLayout.xs="column">
         <div fxLayout.xs="column">
-            <button mat-raised-button color="accent" (click)="vehicleExit($event)">Salida</button>
+            <button mat-raised-button color="accent" (click)="vehicleExit(licensePlateInput)">Salida</button>
         </div>
     </div>
 </div>

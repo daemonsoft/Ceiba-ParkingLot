@@ -14,13 +14,25 @@
     <th mat-header-cell *matHeaderCellDef> Tipo </th>
     <td mat-cell *matCellDef="let invoice">
       <div *ngIf="invoice.vehicle.type === 'CAR'">Auto</div>
-      <div *ngIf="invoice.vehicle.type === 'BIKE'">Moto</div>
+      <div *ngIf="invoice.vehicle.type === 'BIKE'">Moto
+        <span *ngIf="invoice.vehicle.type === 'BIKE' && invoice.vehicle.engineCapacity > 500"> > 500</span>
+      </div>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="entryDate">
     <th mat-header-cell *matHeaderCellDef> Fecha Ingreso </th>
     <td mat-cell *matCellDef="let invoice"> {{invoice.entryDate | date: 'medium'}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="exitDate">
+    <th mat-header-cell *matHeaderCellDef> Fecha Salida </th>
+    <td mat-cell *matCellDef="let invoice"> {{invoice.exitDate | date: 'medium'}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="amount">
+    <th mat-header-cell *matHeaderCellDef> Pagado </th>
+    <td mat-cell *matCellDef="let invoice">{{invoice.amount | currency}} </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

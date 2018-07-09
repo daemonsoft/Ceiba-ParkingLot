@@ -103,6 +103,7 @@ public class VehicleService implements IVehicleService {
     }
 
     public void generateInvoice(Invoice invoice) throws VehicleEntryException, VehicleNotAuthorizedException, VehicleCapacityReachedException, InvoiceDataErrorException {
+
         if (null == invoice || null == invoice.getVehicle()) {
             throw new InvoiceDataErrorException();
         }
@@ -148,7 +149,7 @@ public class VehicleService implements IVehicleService {
         return vehicleRepository.findByLicensePlate(licensePlate);
     }
 
-    public Invoice getVehicleInvoice(String licensePlate) throws VehicleLicensePlateInvalidException {
+    public Invoice getVehicleInvoice(String licensePlate) throws VehicleLicensePlateInvalidException{
         if (null == licensePlate || 3 > licensePlate.length()) {
             throw new VehicleLicensePlateInvalidException();
         }
@@ -170,6 +171,7 @@ public class VehicleService implements IVehicleService {
         }
 
         calculateAmount(invoice);
+
         Vehicle vehicle = vehicleRepository.findByLicensePlate(invoice.getVehicle().getLicensePlate());
 
         if (null != vehicle) {
@@ -210,19 +212,24 @@ public class VehicleService implements IVehicleService {
         if ((hours + 1) < hoursToDay) {
             amount = hourPrice * hours;
         } else {
-            amount = dayPrice;
-            if (hours > 24) {
-                amount = dayPrice * days;
-                for (int i = 0; i < days; i++) {
-                    hours = hours - 24;
-                }
-                if ((hours + 1) < hoursToDay) {
-                    amount = amount + hourPrice * hours;
-                } else {
-                    amount = amount + dayPrice;
+            if (minutes<60) {
+                amount = dayPrice;
+            }else{
+                amount = dayPrice;
+                if (hours > 24) {
+                    amount = dayPrice * days;
+                    for (int i = 0; i < days; i++) {
+                        hours = hours - 24;
+                    }
+                    if ((hours + 1) < hoursToDay) {
+                        amount = amount + hourPrice * hours;
+                    } else {
+                        amount = amount + dayPrice;
+                    }
                 }
             }
         }
+
         if (invoice.getVehicle().getEngineCapacity() > 500) {
             amount = amount + 2000;
         }

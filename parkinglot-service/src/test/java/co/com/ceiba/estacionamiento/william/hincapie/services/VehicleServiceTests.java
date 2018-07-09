@@ -4,13 +4,11 @@ import co.com.ceiba.estacionamiento.william.hincapie.data.VehicleRepository;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Invoice;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Vehicle;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.VehicleType;
-import co.com.ceiba.estacionamiento.william.hincapie.exceptions.InvoiceDataErrorException;
-import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleCapacityReachedException;
-import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleEntryException;
-import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleNotAuthorizedException;
+import co.com.ceiba.estacionamiento.william.hincapie.exceptions.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
@@ -43,9 +41,12 @@ public class VehicleServiceTests {
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws VehicleLicensePlateInvalidException {
+
         MockitoAnnotations.initMocks(this);
+
         vehicleService = new VehicleService(vehicleRepository, invoiceService);
+
         when(vehicleRepository.findByLicensePlate(bike.getLicensePlate())).thenReturn(bike);
         when(vehicleRepository.findByLicensePlate(bikeHighCC.getLicensePlate())).thenReturn(bikeHighCC);
         when(vehicleRepository.findByLicensePlate(car.getLicensePlate())).thenReturn(car);
@@ -57,24 +58,32 @@ public class VehicleServiceTests {
 
     @Test
     public void carEntryTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException, InvoiceDataErrorException {
+
         invoice = new Invoice(car, new Date());
 
         vehicleService.generateInvoice(invoice);
+
+        Mockito.verify(invoiceService).saveInvoice(invoice);
     }
 
     @Test
     public void bikeEntryTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException, InvoiceDataErrorException {
+
         invoice = new Invoice(bike, new Date());
 
         vehicleService.generateInvoice(invoice);
 
+        Mockito.verify(invoiceService).saveInvoice(invoice);
     }
 
     @Test
     public void bikeHighCCEntryTest() throws InvoiceDataErrorException, VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException {
+
         invoice = new Invoice(bikeHighCC, new Date());
+
         vehicleService.generateInvoice(invoice);
 
+        Mockito.verify(invoiceService).saveInvoice(invoice);
     }
 
     @Test(expected = VehicleCapacityReachedException.class)

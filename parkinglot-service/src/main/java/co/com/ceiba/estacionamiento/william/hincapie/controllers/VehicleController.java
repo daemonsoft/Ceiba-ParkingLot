@@ -24,33 +24,48 @@ public class VehicleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Vehicle>> getAllVehicles() {
+    public ResponseEntity getAllVehicles() {
         List<Vehicle> vehicles = vehicleService.getAllVehicles();
         HttpHeaders responseHeaders = new HttpHeaders();
         return new ResponseEntity<>(vehicles, responseHeaders, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Vehicle> vehicleEntry(@RequestBody Vehicle vehicle) throws VehicleEntryException, VehicleNotAuthorizedException, VehicleCapacityReachedException, InvoiceDataErrorException {
+    public ResponseEntity vehicleEntry(@RequestBody Vehicle vehicle) {
         HttpHeaders responseHeaders = new HttpHeaders();
-        vehicleService.generateInvoice(new Invoice(vehicle, new Date()));
+        try {
+            vehicleService.generateInvoice(new Invoice(vehicle, new Date()));
+        } catch (VehicleEntryException | VehicleNotAuthorizedException | VehicleCapacityReachedException | InvoiceDataErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(vehicle, responseHeaders, HttpStatus.OK);
     }
 
     @GetMapping("{licensePlate}")
-    public ResponseEntity<Vehicle> getVehicle(@PathVariable String licensePlate) throws VehicleLicensePlateInvalidException {
-        Vehicle vehicle = vehicleService.getVehicle(licensePlate);
+    public ResponseEntity getVehicle(@PathVariable String licensePlate) {
+        Vehicle vehicle = null;
+        try {
+            vehicle = vehicleService.getVehicle(licensePlate);
+        } catch (VehicleLicensePlateInvalidException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         HttpHeaders responseHeaders = new HttpHeaders();
         return new ResponseEntity<>(vehicle, responseHeaders, HttpStatus.OK);
     }
 
     @GetMapping("/exit/{licensePlate}")
-    public ResponseEntity<Invoice> vehicleExit(@PathVariable String licensePlate) throws VehicleLicensePlateInvalidException, InvoiceDataErrorException {
-        Invoice invoice = vehicleService.getVehicleInvoice(licensePlate);
-        if (null == invoice) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity vehicleExit(@PathVariable String licensePlate) {
+        Invoice invoice;
+        try {
+            invoice = vehicleService.getVehicleInvoice(licensePlate);
+        } catch (VehicleLicensePlateInvalidException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        invoice = vehicleService.vehicleExit(invoice);
+        try {
+            invoice = vehicleService.vehicleExit(invoice);
+        } catch (InvoiceDataErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         HttpHeaders responseHeaders = new HttpHeaders();
         return new ResponseEntity<>(invoice, responseHeaders, HttpStatus.OK);
     }

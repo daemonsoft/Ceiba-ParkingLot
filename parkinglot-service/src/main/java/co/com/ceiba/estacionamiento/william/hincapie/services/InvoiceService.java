@@ -4,6 +4,7 @@ import co.com.ceiba.estacionamiento.william.hincapie.data.InvoiceRepository;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Invoice;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Vehicle;
 import co.com.ceiba.estacionamiento.william.hincapie.exceptions.InvoiceDataErrorException;
+import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleLicensePlateInvalidException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,12 @@ public class InvoiceService implements IInvoiceService {
         return invoiceRepository.save(invoice);
     }
 
-    public Invoice getInvoiceByVehicle(Vehicle vehicle) {
+    public Invoice getInvoiceByVehicle(Vehicle vehicle) throws VehicleLicensePlateInvalidException {
+
+        if (null == vehicle) {
+            throw new VehicleLicensePlateInvalidException();
+        }
+
         for (Invoice invoice : getAllCurrentInvoices()) {
             if (vehicle.equals(invoice.getVehicle())) {
                 return invoice;

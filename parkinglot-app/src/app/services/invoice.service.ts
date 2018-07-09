@@ -12,8 +12,12 @@ export class InvoiceService {
   private url = 'http://localhost:8080/invoice';
   constructor(private http: Http) { }
 
-  getAll() {
+  getAllCurrent() {
     return this.http.get(this.url);
+  }
+
+  getAll() {
+    return this.http.get(this.url+"/history");
   }
 
   private handleError(error: Response) {

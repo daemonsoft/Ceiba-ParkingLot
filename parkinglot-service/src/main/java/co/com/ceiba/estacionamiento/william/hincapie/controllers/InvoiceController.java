@@ -25,14 +25,14 @@ public class InvoiceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Invoice>> getOpenInvoices() {
+    public ResponseEntity getOpenInvoices() {
         List<Invoice> invoiceList = invoiceService.getAllCurrentInvoices();
         HttpHeaders responseHeaders = new HttpHeaders();
         return new ResponseEntity<>(invoiceList, responseHeaders, HttpStatus.OK);
     }
 
     @GetMapping("history")
-    public ResponseEntity<List<Invoice>> getAllInvoices() {
+    public ResponseEntity getAllInvoices() {
         List<Invoice> invoiceList = invoiceService.getAllInvoices();
         HttpHeaders responseHeaders = new HttpHeaders();
         return new ResponseEntity<>(invoiceList, responseHeaders, HttpStatus.OK);

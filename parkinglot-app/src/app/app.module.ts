@@ -1,10 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule, MatSnackBarContainer, MatSnackBarModule } from '@angular/material'
+import { MatInputModule, MatSnackBarContainer, MatSnackBarModule, MatSortModule } from '@angular/material'
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http'
@@ -21,9 +21,10 @@ import { MatTabsModule } from '@angular/material';
 import { InvoicesComponent } from './components/invoices/invoices.component';
 import { HomeComponent } from './components/home/home.component';
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material';
 import { MatSnackBar } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { AllInvoicesComponent } from './components/all-invoices/all-invoices.component';
+import { AppErrorHandler } from './common/app-error-handler';
 
 const appRoutes: Routes = [
   {
@@ -49,7 +50,8 @@ const appRoutes: Routes = [
     PageNotFoundComponent,
     MatTabComponent,
     InvoicesComponent,
-    HomeComponent
+    HomeComponent,
+    AllInvoicesComponent
   ],
   entryComponents: [
     MatSnackBarContainer
@@ -67,7 +69,6 @@ const appRoutes: Routes = [
     HttpModule,
     MatTabsModule,
     MatTableModule,
-    MatPaginatorModule,
     MatSnackBarModule,
     FlexLayoutModule,
     RouterModule.forRoot(
@@ -78,7 +79,8 @@ const appRoutes: Routes = [
   providers: [
     InvoiceService,
     VehicleService,
-    MatSnackBar
+    MatSnackBar,
+    { provide: ErrorHandler, useClass: AppErrorHandler }
   ],
   bootstrap: [AppComponent]
 })

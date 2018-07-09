@@ -3,15 +3,17 @@ package co.com.ceiba.estacionamiento.william.hincapie.controllers;
 import co.com.ceiba.estacionamiento.william.hincapie.data.VehicleRepository;
 import co.com.ceiba.estacionamiento.william.hincapie.services.InvoiceService;
 import co.com.ceiba.estacionamiento.william.hincapie.services.VehicleService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@DataJpaTest
+import javax.transaction.Transactional;
+
 @RunWith(SpringRunner.class)
+@SpringBootTest
+@Transactional
 public class VehicleControllerTest {
 
     private VehicleController vehicleController;
@@ -26,8 +28,6 @@ public class VehicleControllerTest {
 
     @Test
     public void getAllVehicles() {
-        System.out.println(vehicleController);
-        vehicleController.getAllVehicles();
     }
 
     @Test
