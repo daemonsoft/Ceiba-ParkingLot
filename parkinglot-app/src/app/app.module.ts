@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material'
+import { MatInputModule, MatSnackBarContainer, MatSnackBarModule } from '@angular/material'
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http'
@@ -13,27 +13,72 @@ import { VehicleEntryComponent } from './components/vehicle-entry/vehicle-entry.
 import { VehiclesComponent } from './components/vehicles/vehicles.component';
 import { InvoiceService } from './services/invoice.service';
 import { VehicleService } from './services/vehicle.service';
+import { RouterModule, Routes } from '@angular/router';
+import { HeaderComponent } from './components/header/header.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { MatTabComponent } from './components/mat-tab/mat-tab.component';
+import { MatTabsModule } from '@angular/material';
+import { InvoicesComponent } from './components/invoices/invoices.component';
+import { HomeComponent } from './components/home/home.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
+const appRoutes: Routes = [
+  {
+    path: '',
+    component: HomeComponent
+  },
+  {
+    path: 'invoices',
+    component: MatTabComponent
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent
+  }
+]
 
 @NgModule({
   declarations: [
     AppComponent,
     VehicleEntryComponent,
-    VehiclesComponent
+    VehiclesComponent,
+    HeaderComponent,
+    PageNotFoundComponent,
+    MatTabComponent,
+    InvoicesComponent,
+    HomeComponent
+  ],
+  entryComponents: [
+    MatSnackBarContainer
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     BrowserAnimationsModule, // new modules added here
     MatToolbarModule,
     MatCardModule,
-    HttpModule
+    HttpModule,
+    MatTabsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSnackBarModule,
+    FlexLayoutModule,
+    RouterModule.forRoot(
+      appRoutes
+      // ,      { enableTracing: true } // <-- debugging purposes only
+    )
   ],
   providers: [
     InvoiceService,
-    VehicleService
+    VehicleService,
+    MatSnackBar
   ],
   bootstrap: [AppComponent]
 })

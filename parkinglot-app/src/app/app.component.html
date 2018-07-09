@@ -1,21 +1,5 @@
-<header>
-  <mat-toolbar color="primary">Parqueadero</mat-toolbar>
-</header>
-
+<pl-header></pl-header>
 <section class="container">
-  <div class="row">
-    <mat-card class="col-md-12">
-      <pl-vehicle-entry></pl-vehicle-entry>
-    </mat-card>
-    <!-- we use mat-card instead of div -->
-    <mat-card class="col-md-6">2</mat-card>
-    <mat-card class="col-md-6 d-block d-lg-none">3</mat-card>
-    <!-- will be hidden on large screens -->
-    <mat-card class="col-md-6 d-block d-lg-none">4</mat-card>
-  </div>
-  <div>
-    <pl-vehicles></pl-vehicles>
-  </div>
+  <router-outlet></router-outlet>
 </section>
-
 <footer></footer>

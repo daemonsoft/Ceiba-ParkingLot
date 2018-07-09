@@ -1,19 +1,21 @@
-<table class="entry-container" cellspacing="0">
-    <tr>
-        <td class="col-md-6">
-            <mat-form-field>
-                <input matInput placeholder="Placa" [(ngModel)]="licensePlate">
-            </mat-form-field>
-        </td>
-        <td class="col-md-2">
-            <button mat-button color="primary" (click)="saveCar($event)">Car</button>
-        </td>
-        <td class="col-md-2">
-            <button mat-button class="col-md-2" color="primary" (click)="saveBike($event)">Bike</button>
-        </td>
-        <td class="col-md-2">
-            <button mat-button class="col-md-2" color="primary" (click)="saveBigBike($event)">BigBike</button>
-        </td>
-    </tr>
-</table>
-<p>{{licensePlate}}</p>
+<div class="entry-container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
+    <div fxLayout="row" fxLayout.xs="column">
+        <mat-form-field fxLayout.xs="column">
+            <input matInput placeholder="Placa" [(ngModel)]="licensePlate" type="text">
+        </mat-form-field>
+        <div fxLayout.xs="column">
+            <button mat-raised-button color="primary" (click)="saveCar($event)">Car</button>
+        </div>
+        <div fxLayout.xs="column">
+            <button mat-raised-button color="primary" (click)="saveBike($event)">Bike</button>
+        </div>
+        <div fxLayout.xs="column">
+            <button mat-raised-button color="primary" (click)="saveBigBike($event)">BigBike</button>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayout.xs="column">
+        <div fxLayout.xs="column">
+            <button mat-raised-button color="accent" (click)="vehicleExit($event)">Salida</button>
+        </div>
+    </div>
+</div>

@@ -4,9 +4,8 @@ import co.com.ceiba.estacionamiento.william.hincapie.data.VehicleRepository;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Invoice;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Vehicle;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.VehicleType;
-import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleCapacityReachedException;
-import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleEntryException;
-import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleNotAuthorizedException;
+import co.com.ceiba.estacionamiento.william.hincapie.exceptions.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,11 +15,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class VehicleService {
+public class VehicleService implements IVehicleService {
 
+    @Autowired
     private VehicleRepository vehicleRepository;
 
-    private InvoiceService invoiceService;
+    @Autowired
+    private final InvoiceService invoiceService;
 
     private int hoursToDay;
     private int bikeCapacity;
@@ -66,7 +67,7 @@ public class VehicleService {
         return carDayPrice;
     }
 
-    private int currentBikes() {
+    public int currentBikes() {
         int counter = 0;
 
         for (Invoice invoice : invoiceService.getAllCurrentInvoices()) {
@@ -89,7 +90,10 @@ public class VehicleService {
         return counter;
     }
 
-    private boolean isNotValidDay(Invoice invoice) {
+    public boolean isNotValidDay(Invoice invoice) throws InvoiceDataErrorException {
+        if (null == invoice || null == invoice.getVehicle()) {
+            throw new InvoiceDataErrorException();
+        }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(invoice.getEntryDate());
 
@@ -98,7 +102,11 @@ public class VehicleService {
                 || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY));
     }
 
-    public void generateInvoice(Invoice invoice) throws VehicleEntryException, VehicleNotAuthorizedException, VehicleCapacityReachedException {
+    public void generateInvoice(Invoice invoice) throws VehicleEntryException, VehicleNotAuthorizedException, VehicleCapacityReachedException, InvoiceDataErrorException {
+        if (null == invoice || null == invoice.getVehicle()) {
+            throw new InvoiceDataErrorException();
+        }
+
         if (isNotValidDay(invoice)) {
             throw new VehicleNotAuthorizedException();
         }
@@ -132,11 +140,19 @@ public class VehicleService {
         throw new VehicleEntryException();
     }
 
-    public Vehicle getVehicle(String licensePlate) {
+    public Vehicle getVehicle(String licensePlate) throws VehicleLicensePlateInvalidException {
+        if (null == licensePlate || 3 > licensePlate.length()) {
+            throw new VehicleLicensePlateInvalidException();
+        }
+
         return vehicleRepository.findByLicensePlate(licensePlate);
     }
 
-    public Invoice getVehicleInvoice(String licensePlate) {
+    public Invoice getVehicleInvoice(String licensePlate) throws VehicleLicensePlateInvalidException {
+        if (null == licensePlate || 3 > licensePlate.length()) {
+            throw new VehicleLicensePlateInvalidException();
+        }
+
         return invoiceService.getInvoiceByVehicle(vehicleRepository.findByLicensePlate(licensePlate));
     }
 
@@ -148,7 +164,11 @@ public class VehicleService {
         return vehicleList;
     }
 
-    public Invoice vehicleExit(Invoice invoice) {
+    public Invoice vehicleExit(Invoice invoice) throws InvoiceDataErrorException {
+        if (null == invoice || null == invoice.getVehicle()) {
+            throw new InvoiceDataErrorException();
+        }
+
         calculateAmount(invoice);
         Vehicle vehicle = vehicleRepository.findByLicensePlate(invoice.getVehicle().getLicensePlate());
 
@@ -162,7 +182,10 @@ public class VehicleService {
         return invoice;
     }
 
-    private void calculateAmount(Invoice invoice) {
+    private void calculateAmount(Invoice invoice) throws InvoiceDataErrorException {
+        if (null == invoice || null == invoice.getVehicle()) {
+            throw new InvoiceDataErrorException();
+        }
 
         if (null == invoice.getExitDate()) {
             invoice.setExitDate(new Date());

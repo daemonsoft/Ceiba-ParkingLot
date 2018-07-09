@@ -1,14 +1,13 @@
-package co.com.ceiba.estacionamiento.william.hincapie;
+package co.com.ceiba.estacionamiento.william.hincapie.services;
 
 import co.com.ceiba.estacionamiento.william.hincapie.data.VehicleRepository;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Invoice;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.Vehicle;
 import co.com.ceiba.estacionamiento.william.hincapie.domain.VehicleType;
+import co.com.ceiba.estacionamiento.william.hincapie.exceptions.InvoiceDataErrorException;
 import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleCapacityReachedException;
 import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleEntryException;
 import co.com.ceiba.estacionamiento.william.hincapie.exceptions.VehicleNotAuthorizedException;
-import co.com.ceiba.estacionamiento.william.hincapie.services.InvoiceService;
-import co.com.ceiba.estacionamiento.william.hincapie.services.VehicleService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -20,7 +19,6 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class VehicleServiceTests {
@@ -39,7 +37,7 @@ public class VehicleServiceTests {
     private Invoice invoice;
 
     public VehicleServiceTests() {
-        this.car = new Vehicle("AAA123", VehicleType.CAR);
+        this.car = new Vehicle("CAR123", VehicleType.CAR);
         this.bike = new Vehicle("BBB123", VehicleType.BIKE, 125);
         this.bikeHighCC = new Vehicle("BBB123", VehicleType.BIKE, 650);
     }
@@ -58,14 +56,14 @@ public class VehicleServiceTests {
     }
 
     @Test
-    public void carEntryTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException {
+    public void carEntryTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException, InvoiceDataErrorException {
         invoice = new Invoice(car, new Date());
 
         vehicleService.generateInvoice(invoice);
     }
 
     @Test
-    public void bikeEntryTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException {
+    public void bikeEntryTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException, InvoiceDataErrorException {
         invoice = new Invoice(bike, new Date());
 
         vehicleService.generateInvoice(invoice);
@@ -73,22 +71,17 @@ public class VehicleServiceTests {
     }
 
     @Test
-    public void bikeHighCCEntryTest() {
+    public void bikeHighCCEntryTest() throws InvoiceDataErrorException, VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException {
         invoice = new Invoice(bikeHighCC, new Date());
-        boolean checkException = true;
-        try {
-            vehicleService.generateInvoice(invoice);
-        } catch (VehicleEntryException | VehicleNotAuthorizedException | VehicleCapacityReachedException e) {
-            checkException = false;
-        }
-        assertTrue(checkException);
+        vehicleService.generateInvoice(invoice);
+
     }
 
     @Test(expected = VehicleCapacityReachedException.class)
-    public void carEntryMaxCapacityTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException {
+    public void carEntryMaxCapacityTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException, InvoiceDataErrorException {
         List<Invoice> invoiceList = new ArrayList<>();
         for (int i = 0; i < vehicleService.getCarCapacity(); i++) {
-            invoice = new Invoice(new Vehicle("AAK123", VehicleType.CAR), new Date());
+            invoice = new Invoice(new Vehicle("CAR456", VehicleType.CAR), new Date());
             invoiceList.add(invoice);
         }
         when(invoiceService.getAllCurrentInvoices()).thenReturn(invoiceList);
@@ -100,7 +93,7 @@ public class VehicleServiceTests {
     }
 
     @Test(expected = VehicleCapacityReachedException.class)
-    public void bikeEntryMaxCapacityTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException {
+    public void bikeEntryMaxCapacityTest() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException, InvoiceDataErrorException {
         List<Invoice> invoiceList = new ArrayList<>();
         for (int i = 0; i < vehicleService.getBikeCapacity(); i++) {
             invoice = new Invoice(new Vehicle("BBK123", VehicleType.BIKE, 125), new Date());
@@ -115,7 +108,7 @@ public class VehicleServiceTests {
     }
 
     @Test
-    public void carExitByHourTest() {
+    public void carExitByHourTest() throws InvoiceDataErrorException {
         Calendar calendar = Calendar.getInstance();
         Date entryDate = calendar.getTime();
 
@@ -132,7 +125,7 @@ public class VehicleServiceTests {
     }
 
     @Test
-    public void carExitByDayTest() {
+    public void carExitByDayTest() throws InvoiceDataErrorException {
         Calendar calendar = Calendar.getInstance();
         Date entryDate = calendar.getTime();
 
@@ -148,7 +141,7 @@ public class VehicleServiceTests {
     }
 
     @Test
-    public void carExitExampleTest() {
+    public void carExitExampleTest() throws InvoiceDataErrorException {
         Calendar calendar = Calendar.getInstance();
         Date entryDate = calendar.getTime();
 
@@ -164,7 +157,7 @@ public class VehicleServiceTests {
     }
 
     @Test
-    public void bikeExitExampleTest() {
+    public void bikeExitExampleTest() throws InvoiceDataErrorException {
         Calendar calendar = Calendar.getInstance();
         Date entryDate = calendar.getTime();
 
@@ -180,7 +173,7 @@ public class VehicleServiceTests {
     }
 
     @Test
-    public void bikeExitByHourTest() {
+    public void bikeExitByHourTest() throws InvoiceDataErrorException {
         Calendar calendar = Calendar.getInstance();
         Date entryDate = calendar.getTime();
 
@@ -196,7 +189,7 @@ public class VehicleServiceTests {
     }
 
     @Test
-    public void bikeExitByDayTest() {
+    public void bikeExitByDayTest() throws InvoiceDataErrorException {
         Calendar calendar = Calendar.getInstance();
         Date entryDate = calendar.getTime();
 
@@ -212,7 +205,7 @@ public class VehicleServiceTests {
     }
 
     @Test
-    public void bikeExitHighCCByDayTest() {
+    public void bikeExitHighCCByDayTest() throws InvoiceDataErrorException {
         Calendar calendar = Calendar.getInstance();
         Date entryDate = calendar.getTime();
 
@@ -228,7 +221,7 @@ public class VehicleServiceTests {
     }
 
     @Test
-    public void bikeExitHighCCByHourTest() {
+    public void bikeExitHighCCByHourTest() throws InvoiceDataErrorException {
         Calendar calendar = Calendar.getInstance();
         Date entryDate = calendar.getTime();
 
@@ -243,7 +236,7 @@ public class VehicleServiceTests {
     }
 
     @Test
-    public void bikeExitHighCCExampleTest() {
+    public void bikeExitHighCCExampleTest() throws InvoiceDataErrorException {
         Calendar calendar = Calendar.getInstance();
         Date entryDate = calendar.getTime();
 
@@ -260,12 +253,12 @@ public class VehicleServiceTests {
     }
 
     @Test(expected = VehicleNotAuthorizedException.class)
-    public void carEntryUnauthorized() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException {
-
+    public void carEntryUnauthorized() throws VehicleCapacityReachedException, VehicleEntryException, VehicleNotAuthorizedException, InvoiceDataErrorException {
+        Vehicle unathorizedCar = new Vehicle("AAR123", VehicleType.CAR);
         Calendar calendar = Calendar.getInstance();
         calendar.set(2018, Calendar.JUNE, 24);
 
-        invoice = new Invoice(car, calendar.getTime());
+        invoice = new Invoice(unathorizedCar, calendar.getTime());
 
         vehicleService.generateInvoice(invoice);
     }
